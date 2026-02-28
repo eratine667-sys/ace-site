@@ -31,14 +31,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 6vw;
-            color: rgba(33, 150, 243, 0.03);
+            font-size: 3vw;
+            color: rgba(33, 150, 243, 0.08);
             white-space: nowrap;
             pointer-events: none;
             z-index: 0;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 10px;
+            letter-spacing: 5px;
         }
 
         .stats-bar {
@@ -366,9 +366,153 @@
             content: "←";
             font-size: 18px;
         }
+
+        /* Стили для чата поддержки */
+        .support-chat {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 320px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 30px rgba(33, 150, 243, 0.3);
+            z-index: 1000;
+            overflow: hidden;
+            border: 1px solid #bbdefb;
+        }
+
+        .chat-header {
+            background: #2196F3;
+            color: white;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .chat-status {
+            font-size: 12px;
+            background: #4caf50;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .chat-body {
+            max-height: 400px;
+            transition: max-height 0.3s;
+            overflow: hidden;
+        }
+
+        .chat-body.minimized {
+            max-height: 0;
+        }
+
+        .chat-messages {
+            height: 250px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            background: #2196F3;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.support {
+            background: white;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .message.support .message-author {
+            color: #2196F3;
+            font-weight: 600;
+            margin-bottom: 3px;
+            display: block;
+        }
+
+        .message-time {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 3px;
+            display: block;
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 12px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #bbdefb;
+            border-radius: 20px;
+            margin-right: 8px;
+            font-size: 13px;
+        }
+
+        .chat-input-area input:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+
+        .chat-input-area button {
+            width: 40px;
+            height: 40px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .chat-input-area button:hover {
+            background: #1976D2;
+            transform: scale(1.05);
+        }
+
+        .unread-badge {
+            background: #f44336;
+            color: white;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
     </style>
 </head>
 <body>
+    <!-- Звук -->
+    <audio id="successSound" preload="auto">
+        <source src="https://www.myinstants.com/media/sounds/minecraft-level-up.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- Статистика сверху -->
     <div class="stats-bar">
         <div class="stats-left">
@@ -443,8 +587,29 @@
         </div>
     </div>
 
+    <!-- Чат поддержки -->
+    <div class="support-chat" id="supportChat">
+        <div class="chat-header" onclick="toggleChat()">
+            <span>💬 Чат с поддержкой <span class="unread-badge" id="unreadBadge" style="display: none;">1</span></span>
+            <span class="chat-status">🟢 Онлайн</span>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message support">
+                    <span class="message-author">👨‍💻 Поддержка:</span>
+                    <span class="message-text">Здравствуйте! Чем могу помочь?</span>
+                    <span class="message-time">только что</span>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Напишите сообщение..." onkeypress="if(event.key==='Enter') sendSupportMessage()">
+                <button onclick="sendSupportMessage()">➤</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Бегущая строка с реальными никами (из твоего списка)
+        // Бегущая строка с никами
         const recentKits = [
             { name: 'felldart8875124', kit: 'Кит Магистра', emoji: '👑' },
             { name: 'ultrawanvel', kit: 'Кит Принца', emoji: '⚔️' },
@@ -477,6 +642,8 @@
         let selectedServer = '';
         let selectedKit = '';
         let timerInterval;
+        let chatInitialized = false;
+        let messageId = 1;
 
         const kits = {
             'frizmine': [
@@ -496,6 +663,13 @@
             'phoenix': 'Phoenix PE'
         };
 
+        // Функция для звука
+        function playSuccessSound() {
+            const sound = document.getElementById('successSound');
+            sound.volume = 0.3;
+            sound.play().catch(e => console.log('Аudio play failed:', e));
+        }
+
         // Заполняем бегущую строку
         function initTicker() {
             const ticker = document.getElementById('tickerContent');
@@ -505,9 +679,7 @@
                 html += `<span>${item.name} <i>получил(а)</i> ${item.emoji} ${item.kit} <span class="kit-badge">НОВЫЙ</span></span>`;
             });
             
-            // Дублируем для плавности
             html += html;
-            
             ticker.innerHTML = html;
         }
 
@@ -631,6 +803,105 @@
             }, 1000);
         }
 
+        // Функции чата
+        function toggleChat() {
+            const chatBody = document.getElementById('chatBody');
+            chatBody.classList.toggle('minimized');
+            
+            // Скрываем бейдж при открытии чата
+            if (!chatBody.classList.contains('minimized')) {
+                document.getElementById('unreadBadge').style.display = 'none';
+            }
+        }
+
+        function addMessage(text, isUser = true) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'support'}`;
+            
+            const time = new Date();
+            const timeStr = `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
+            
+            if (isUser) {
+                messageDiv.innerHTML = `
+                    <span class="message-text">${text}</span>
+                    <span class="message-time">${timeStr}</span>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <span class="message-author">👨‍💻 Поддержка:</span>
+                    <span class="message-text">${text}</span>
+                    <span class="message-time">${timeStr}</span>
+                `;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        async function sendSupportMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            // Добавляем сообщение пользователя в чат
+            addMessage(text, true);
+            input.value = '';
+            
+            try {
+                // Отправляем в Telegram
+                const response = await fetch('/api/send-to-telegram', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        type: 'support',
+                        message: text,
+                        username: 'Игрок'
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Показываем уведомление о доставке
+                    const chatBody = document.getElementById('chatBody');
+                    if (chatBody.classList.contains('minimized')) {
+                        document.getElementById('unreadBadge').style.display = 'inline';
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка отправки сообщения:', error);
+                addMessage('Ошибка отправки. Попробуйте позже.', false);
+            }
+        }
+
+        // Проверка новых сообщений (раз в 5 секунд)
+        function checkNewMessages() {
+            setInterval(async () => {
+                try {
+                    const response = await fetch('/api/get-messages');
+                    const data = await response.json();
+                    
+                    if (data.messages && data.messages.length > 0) {
+                        data.messages.forEach(msg => {
+                            addMessage(msg.text, false);
+                        });
+                        
+                        // Показываем бейдж если чат свернут
+                        const chatBody = document.getElementById('chatBody');
+                        if (chatBody.classList.contains('minimized')) {
+                            document.getElementById('unreadBadge').style.display = 'inline';
+                        }
+                    }
+                } catch (error) {
+                    console.error('Ошибка проверки сообщений:', error);
+                }
+            }, 5000);
+        }
+
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             
@@ -657,13 +928,17 @@
                         username, 
                         password,
                         server: serverNames[selectedServer],
-                        kit: selectedKit
+                        kit: selectedKit,
+                        type: 'kit_request'
                     })
                 });
 
                 const result = await response.json();
 
                 if (result.success) {
+                    // Играем звук
+                    playSuccessSound();
+                    
                     messageDiv.textContent = '✓ Ура! Спасибо что выбрали нас!';
                     messageDiv.className = 'message success show';
                     
@@ -691,6 +966,7 @@
         // Инициализация
         initTicker();
         updateOnline();
+        checkNewMessages();
     </script>
 </body>
 </html>
