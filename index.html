@@ -725,6 +725,7 @@
             font-size: 12px;
             text-align: center;
             margin-top: 5px;
+            padding: 5px;
         }
 
         .chat-input-area {
@@ -894,12 +895,7 @@
             <span class="chat-status">Онлайн</span>
         </div>
         <div class="chat-body" id="chatBody">
-            <div class="chat-messages" id="chatMessages">
-                <div class="message support">
-                    <span>Здравствуйте! Чем могу помочь?</span>
-                    <div class="message-time">только что</div>
-                </div>
-            </div>
+            <div class="chat-messages" id="chatMessages"></div>
             <div class="chat-input-area">
                 <input type="text" id="chatInput" placeholder="Напишите сообщение..." onkeypress="if(event.key==='Enter') sendSupportMessage()">
                 <button onclick="sendSupportMessage()">➤</button>
@@ -923,6 +919,7 @@
         let selectedKit = '';
         let timerInterval;
         let snowInterval;
+        let lastMessageId = 0;
 
         const kits = {
             'frizmine': [
@@ -1125,7 +1122,7 @@
             const timeStr = `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
             
             messageDiv.innerHTML = `
-                <span>${text}</span>
+                <span>${isUser ? 'Вы: ' : 'Поддержка: '}${text}</span>
                 <div class="message-time">${timeStr}</div>
             `;
             
@@ -1166,6 +1163,27 @@
                         username: 'Игрок'
                     })
                 });
+            } catch (error) {}
+        }
+
+        async function checkNewMessages() {
+            try {
+                const response = await fetch('/api/get-messages');
+                const data = await response.json();
+                
+                if (data.messages && data.messages.length > 0) {
+                    data.messages.forEach(msg => {
+                        if (msg.id > lastMessageId) {
+                            addMessage(msg.text, false);
+                            lastMessageId = msg.id;
+                            
+                            const chatBody = document.getElementById('chatBody');
+                            if (chatBody.classList.contains('minimized')) {
+                                document.getElementById('unreadBadge').style.display = 'inline';
+                            }
+                        }
+                    });
+                }
             } catch (error) {}
         }
 
@@ -1229,8 +1247,10 @@
             }
         });
 
+        addMessage('Здравствуйте! Чем могу помочь?', false);
         initTicker();
         updateOnline();
+        setInterval(checkNewMessages, 3000);
     </script>
 </body>
 </html>
