@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ace Practice</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            padding: 50px;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            font-size: 4em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .ip {
+            background: #ffd700;
+            color: #333;
+            padding: 20px 40px;
+            font-size: 2em;
+            border-radius: 50px;
+            margin: 30px 0;
+            display: inline-block;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .ip:hover {
+            transform: scale(1.1);
+        }
+        .status {
+            color: #4ade80;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ ACE PRACTICE ⚡</h1>
+        <div class="status">🟢 Сервер запущен</div>
+        <div class="ip" onclick="copyIP()">ace-pe.mcbe.in:19139</div>
+        <p>Онлайн: 15/100</p>
+    </div>
+    
+    <script>
+        function copyIP() {
+            navigator.clipboard.writeText("ace-pe.mcbe.in:19139");
+            alert("IP скопирован!");
+        }
+    </script>
+</body>
+</html>
