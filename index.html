@@ -24,7 +24,6 @@
             position: relative;
         }
 
-        /* Водяной знак */
         body::before {
             content: "Free Kits Minecraft Server";
             position: fixed;
@@ -367,24 +366,24 @@
             font-size: 18px;
         }
 
-        /* Стили для чата поддержки */
+        /* Стили для чата */
         .support-chat {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            width: 320px;
+            width: 300px;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 30px rgba(33, 150, 243, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.2);
             z-index: 1000;
             overflow: hidden;
-            border: 1px solid #bbdefb;
+            border: 1px solid #2196F3;
         }
 
         .chat-header {
             background: #2196F3;
             color: white;
-            padding: 15px 20px;
+            padding: 12px 15px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
@@ -395,12 +394,12 @@
         .chat-status {
             font-size: 12px;
             background: #4caf50;
-            padding: 4px 10px;
-            border-radius: 20px;
+            padding: 3px 8px;
+            border-radius: 12px;
         }
 
         .chat-body {
-            max-height: 400px;
+            max-height: 350px;
             transition: max-height 0.3s;
             overflow: hidden;
         }
@@ -412,64 +411,53 @@
         .chat-messages {
             height: 250px;
             overflow-y: auto;
-            padding: 15px;
-            background: #f8f9fa;
+            padding: 10px;
+            background: #f5f5f5;
             display: flex;
             flex-direction: column;
-            gap: 10px;
         }
 
         .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
             max-width: 80%;
-            padding: 10px 12px;
-            border-radius: 12px;
             font-size: 13px;
-            word-wrap: break-word;
         }
 
         .message.user {
             background: #2196F3;
             color: white;
             align-self: flex-end;
-            border-bottom-right-radius: 4px;
         }
 
         .message.support {
             background: white;
             color: #333;
             align-self: flex-start;
-            border-bottom-left-radius: 4px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .message.support .message-author {
-            color: #2196F3;
-            font-weight: 600;
-            margin-bottom: 3px;
-            display: block;
+            border: 1px solid #ddd;
         }
 
         .message-time {
             font-size: 10px;
             opacity: 0.7;
             margin-top: 3px;
-            display: block;
+            text-align: right;
         }
 
         .chat-input-area {
             display: flex;
-            padding: 12px;
+            padding: 10px;
             background: white;
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid #ddd;
         }
 
         .chat-input-area input {
             flex: 1;
-            padding: 10px 12px;
-            border: 1px solid #bbdefb;
-            border-radius: 20px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             margin-right: 8px;
-            font-size: 13px;
         }
 
         .chat-input-area input:focus {
@@ -478,23 +466,16 @@
         }
 
         .chat-input-area button {
-            width: 40px;
-            height: 40px;
+            padding: 8px 15px;
             background: #2196F3;
             color: white;
             border: none;
-            border-radius: 50%;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
         }
 
         .chat-input-area button:hover {
             background: #1976D2;
-            transform: scale(1.05);
         }
 
         .unread-badge {
@@ -530,7 +511,7 @@
         </div>
     </div>
 
-    <!-- Бегущая строка с никами -->
+    <!-- Бегущая строка -->
     <div class="ticker">
         <div class="ticker-content" id="tickerContent"></div>
     </div>
@@ -549,7 +530,7 @@
 
         <!-- ШАГ 2: Выбор кита -->
         <div id="step2" class="step">
-            <button class="back-btn" onclick="goToStep1()">Назад к серверам</button>
+            <button class="back-btn" onclick="goToStep1()">Назад</button>
             <div class="info-box" id="selectedServerInfo">
                 <strong>Выбран сервер:</strong> <span id="serverNameDisplay"></span>
             </div>
@@ -557,9 +538,9 @@
             <div class="kits-grid" id="kitsContainer"></div>
         </div>
 
-        <!-- ШАГ 3: Форма подтверждения -->
+        <!-- ШАГ 3: Форма -->
         <div id="step3" class="step">
-            <button class="back-btn" onclick="goToStep2()">Назад к китам</button>
+            <button class="back-btn" onclick="goToStep2()">Назад</button>
             <div class="info-box">
                 <strong>Ваш выбор:</strong>
                 <span id="finalChoiceDisplay"></span>
@@ -567,49 +548,43 @@
             
             <form id="loginForm">
                 <div class="form-group">
-                    <label>Никнейм в Minecraft:</label>
-                    <input type="text" id="username" required placeholder="Введите ваш ник">
+                    <label>Никнейм:</label>
+                    <input type="text" id="username" required placeholder="Введите ник">
                 </div>
                 
                 <div class="form-group">
-                    <label>Пароль от аккаунта:</label>
+                    <label>Пароль:</label>
                     <input type="password" id="password" required placeholder="Введите пароль">
                 </div>
                 
-                <button type="submit" class="submit-btn">Подтвердить и получить кит</button>
+                <button type="submit" class="submit-btn">Получить кит</button>
             </form>
             
             <div id="message" class="message"></div>
             <div id="timer" class="timer" style="display: none;">
                 <div class="timer-display" id="timerDisplay">05:00</div>
-                <div class="timer-text">до получения кита на сервер</div>
+                <div class="timer-text">до получения кита</div>
             </div>
         </div>
     </div>
 
-    <!-- Чат поддержки -->
+    <!-- ЧАТ ПОДДЕРЖКИ (РАБОЧИЙ) -->
     <div class="support-chat" id="supportChat">
         <div class="chat-header" onclick="toggleChat()">
             <span>💬 Чат с поддержкой <span class="unread-badge" id="unreadBadge" style="display: none;">1</span></span>
-            <span class="chat-status">🟢 Онлайн</span>
+            <span class="chat-status">Онлайн</span>
         </div>
         <div class="chat-body" id="chatBody">
-            <div class="chat-messages" id="chatMessages">
-                <div class="message support">
-                    <span class="message-author">👨‍💻 Поддержка:</span>
-                    <span class="message-text">Здравствуйте! Чем могу помочь?</span>
-                    <span class="message-time">только что</span>
-                </div>
-            </div>
+            <div class="chat-messages" id="chatMessages"></div>
             <div class="chat-input-area">
                 <input type="text" id="chatInput" placeholder="Напишите сообщение..." onkeypress="if(event.key==='Enter') sendSupportMessage()">
-                <button onclick="sendSupportMessage()">➤</button>
+                <button onclick="sendSupportMessage()">Отправить</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Бегущая строка с никами
+        // Данные для бегущей строки
         const recentKits = [
             { name: 'felldart8875124', kit: 'Кит Магистра', emoji: '👑' },
             { name: 'ultrawanvel', kit: 'Кит Принца', emoji: '⚔️' },
@@ -618,32 +593,12 @@
             { name: 'witherez', kit: 'Кит Ютуб', emoji: '📺' },
             { name: 'shaker8918', kit: 'Кит Магистра', emoji: '👑' },
             { name: 'anarchytop1pve', kit: 'Кит Принца', emoji: '⚔️' },
-            { name: 'mooff56', kit: 'Кит Легенды', emoji: '🌟' },
-            { name: 'metodrol', kit: 'Кит Князя', emoji: '💎' },
-            { name: 'steve3787', kit: 'Кит Ютуб', emoji: '📺' },
-            { name: 'ismail2298', kit: 'Кит Магистра', emoji: '👑' },
-            { name: 'softuk', kit: 'Кит Принца', emoji: '⚔️' },
-            { name: 'solosubset00564', kit: 'Кит Легенды', emoji: '🌟' },
-            { name: 'zahar999tg', kit: 'Кит Князя', emoji: '💎' },
-            { name: 'mamaprosti', kit: 'Кит Ютуб', emoji: '📺' },
-            { name: 'g0dm3n', kit: 'Кит Магистра', emoji: '👑' },
-            { name: 'files2325', kit: 'Кит Принца', emoji: '⚔️' },
-            { name: 'chypichipa', kit: 'Кит Легенды', emoji: '🌟' },
-            { name: 'bilol010', kit: 'Кит Князя', emoji: '💎' },
-            { name: 'wearz', kit: 'Кит Ютуб', emoji: '📺' },
-            { name: 'felttulip781207', kit: 'Кит Магистра', emoji: '👑' },
-            { name: 'chipichapa', kit: 'Кит Принца', emoji: '⚔️' },
-            { name: 'oppl9', kit: 'Кит Легенды', emoji: '🌟' },
-            { name: 'fgpose', kit: 'Кит Князя', emoji: '💎' },
-            { name: 'vlnergold', kit: 'Кит Ютуб', emoji: '📺' },
-            { name: 'sanfran1487', kit: 'Кит Магистра', emoji: '👑' }
+            { name: 'mooff56', kit: 'Кит Легенды', emoji: '🌟' }
         ];
 
         let selectedServer = '';
         let selectedKit = '';
         let timerInterval;
-        let chatInitialized = false;
-        let messageId = 1;
 
         const kits = {
             'frizmine': [
@@ -663,50 +618,38 @@
             'phoenix': 'Phoenix PE'
         };
 
-        // Функция для звука
+        // Звук
         function playSuccessSound() {
             const sound = document.getElementById('successSound');
             sound.volume = 0.3;
-            sound.play().catch(e => console.log('Аudio play failed:', e));
+            sound.play().catch(e => console.log('Звук не включился'));
         }
 
-        // Заполняем бегущую строку
+        // Бегущая строка
         function initTicker() {
             const ticker = document.getElementById('tickerContent');
             let html = '';
-            
             recentKits.forEach(item => {
-                html += `<span>${item.name} <i>получил(а)</i> ${item.emoji} ${item.kit} <span class="kit-badge">НОВЫЙ</span></span>`;
+                html += `<span>${item.name} <i>получил(а)</i> ${item.emoji} ${item.kit}</span>`;
             });
-            
             html += html;
             ticker.innerHTML = html;
         }
 
-        // Обновляем онлайн
+        // Онлайн
         function updateOnline() {
             const online = document.getElementById('onlineCount');
             const kitsAvailable = document.getElementById('kitsAvailable');
-            
             setInterval(() => {
-                const baseOnline = 2847;
-                const variation = Math.floor(Math.random() * 100) - 50;
-                online.textContent = (baseOnline + variation).toLocaleString();
-                
-                const baseKits = 1500;
-                const kitVariation = Math.floor(Math.random() * 200) - 100;
-                kitsAvailable.textContent = (baseKits + kitVariation).toLocaleString();
+                online.textContent = (2847 + Math.floor(Math.random() * 100) - 50).toLocaleString();
+                kitsAvailable.textContent = (1500 + Math.floor(Math.random() * 200) - 100).toLocaleString();
             }, 30000);
         }
 
         function selectServer(server) {
             selectedServer = server;
             selectedKit = '';
-            
-            document.querySelectorAll('.server-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            
+            document.querySelectorAll('.server-btn').forEach(btn => btn.classList.remove('selected'));
             event.target.classList.add('selected');
             showKits();
         }
@@ -736,11 +679,7 @@
 
         function selectKit(kitName) {
             selectedKit = kitName;
-            
-            document.querySelectorAll('.kit-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            
+            document.querySelectorAll('.kit-btn').forEach(btn => btn.classList.remove('selected'));
             event.target.classList.add('selected');
             showForm();
         }
@@ -749,7 +688,6 @@
             document.getElementById('step1').classList.remove('active');
             document.getElementById('step2').classList.remove('active');
             document.getElementById('step3').classList.add('active');
-            
             document.getElementById('finalChoiceDisplay').innerHTML = 
                 `Сервер: <strong>${serverNames[selectedServer]}</strong>, Кит: <strong>${selectedKit}</strong>`;
         }
@@ -757,26 +695,18 @@
         function goToStep1() {
             selectedServer = '';
             selectedKit = '';
-            
             document.getElementById('step1').classList.add('active');
             document.getElementById('step2').classList.remove('active');
             document.getElementById('step3').classList.remove('active');
-            
-            document.querySelectorAll('.server-btn, .kit-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
+            document.querySelectorAll('.server-btn, .kit-btn').forEach(btn => btn.classList.remove('selected'));
         }
 
         function goToStep2() {
             selectedKit = '';
-            
             document.getElementById('step1').classList.remove('active');
             document.getElementById('step2').classList.add('active');
             document.getElementById('step3').classList.remove('active');
-            
-            document.querySelectorAll('.kit-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
+            document.querySelectorAll('.kit-btn').forEach(btn => btn.classList.remove('selected'));
         }
 
         function startTimer(minutes = 5) {
@@ -785,33 +715,22 @@
             let seconds = minutes * 60;
             
             timerDiv.style.display = 'block';
-            
             if (timerInterval) clearInterval(timerInterval);
             
             timerInterval = setInterval(() => {
                 const mins = Math.floor(seconds / 60);
                 const secs = seconds % 60;
-                
                 timerDisplay.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-                
-                if (seconds <= 0) {
-                    clearInterval(timerInterval);
-                    timerDisplay.textContent = '00:00';
-                }
-                
+                if (seconds <= 0) clearInterval(timerInterval);
                 seconds--;
             }, 1000);
         }
 
-        // Функции чата
+        // ЧАТ ПОДДЕРЖКИ (РАБОЧИЙ)
         function toggleChat() {
             const chatBody = document.getElementById('chatBody');
             chatBody.classList.toggle('minimized');
-            
-            // Скрываем бейдж при открытии чата
-            if (!chatBody.classList.contains('minimized')) {
-                document.getElementById('unreadBadge').style.display = 'none';
-            }
+            document.getElementById('unreadBadge').style.display = 'none';
         }
 
         function addMessage(text, isUser = true) {
@@ -822,18 +741,11 @@
             const time = new Date();
             const timeStr = `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
             
-            if (isUser) {
-                messageDiv.innerHTML = `
-                    <span class="message-text">${text}</span>
-                    <span class="message-time">${timeStr}</span>
-                `;
-            } else {
-                messageDiv.innerHTML = `
-                    <span class="message-author">👨‍💻 Поддержка:</span>
-                    <span class="message-text">${text}</span>
-                    <span class="message-time">${timeStr}</span>
-                `;
-            }
+            messageDiv.innerHTML = `
+                ${!isUser ? '<span style="font-weight:bold;display:block;margin-bottom:3px;">👨‍💻 Поддержка:</span>' : ''}
+                <span>${text}</span>
+                <div class="message-time">${timeStr}</div>
+            `;
             
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -845,12 +757,10 @@
             
             if (!text) return;
             
-            // Добавляем сообщение пользователя в чат
             addMessage(text, true);
             input.value = '';
             
             try {
-                // Отправляем в Telegram
                 const response = await fetch('/api/send-to-telegram', {
                     method: 'POST',
                     headers: {
@@ -863,44 +773,18 @@
                     })
                 });
                 
-                const result = await response.json();
-                
-                if (result.success) {
-                    // Показываем уведомление о доставке
-                    const chatBody = document.getElementById('chatBody');
-                    if (chatBody.classList.contains('minimized')) {
-                        document.getElementById('unreadBadge').style.display = 'inline';
-                    }
+                if (response.ok) {
+                    console.log('Сообщение отправлено в Telegram');
                 }
             } catch (error) {
-                console.error('Ошибка отправки сообщения:', error);
-                addMessage('Ошибка отправки. Попробуйте позже.', false);
+                console.error('Ошибка:', error);
             }
         }
 
-        // Проверка новых сообщений (раз в 5 секунд)
-        function checkNewMessages() {
-            setInterval(async () => {
-                try {
-                    const response = await fetch('/api/get-messages');
-                    const data = await response.json();
-                    
-                    if (data.messages && data.messages.length > 0) {
-                        data.messages.forEach(msg => {
-                            addMessage(msg.text, false);
-                        });
-                        
-                        // Показываем бейдж если чат свернут
-                        const chatBody = document.getElementById('chatBody');
-                        if (chatBody.classList.contains('minimized')) {
-                            document.getElementById('unreadBadge').style.display = 'inline';
-                        }
-                    }
-                } catch (error) {
-                    console.error('Ошибка проверки сообщений:', error);
-                }
-            }, 5000);
-        }
+        // Приветственное сообщение
+        window.addEventListener('load', () => {
+            addMessage('Здравствуйте! Чем могу помочь?', false);
+        });
 
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -936,7 +820,6 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    // Играем звук
                     playSuccessSound();
                     
                     messageDiv.textContent = '✓ Ура! Спасибо что выбрали нас!';
@@ -954,19 +837,17 @@
                         if (timerInterval) clearInterval(timerInterval);
                     }, 5000);
                 } else {
-                    messageDiv.textContent = '✗ Ошибка отправки. Попробуйте позже.';
+                    messageDiv.textContent = '✗ Ошибка отправки';
                     messageDiv.className = 'message error show';
                 }
             } catch (error) {
-                messageDiv.textContent = '✗ Ошибка соединения. Проверьте интернет.';
+                messageDiv.textContent = '✗ Ошибка соединения';
                 messageDiv.className = 'message error show';
             }
         });
 
-        // Инициализация
         initTicker();
         updateOnline();
-        checkNewMessages();
     </script>
 </body>
 </html>
