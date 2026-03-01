@@ -6,69 +6,72 @@
     <style>
         :root { --red: #ff0000; --bg: #0c0c0c; --card: #1a1a1a; }
         body { background-color: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
-        .container { background-color: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 0 35px rgba(255, 0, 0, 0.5); width: 380px; text-align: center; border: 2px solid var(--red); position: relative; }
+        .container { background-color: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 0 35px rgba(255, 0, 0, 0.5); width: 400px; text-align: center; border: 2px solid var(--red); position: relative; }
         .menu-btn { position: absolute; top: 20px; right: 20px; cursor: pointer; z-index: 100; display: none; }
         .menu-btn div { width: 25px; height: 3px; background: white; margin: 5px; }
         .menu-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 90; display: none; flex-direction: column; justify-content: center; align-items: center; border-radius: 18px; }
-        .menu-link { color: white; text-decoration: none; font-size: 20px; margin: 15px; font-weight: bold; cursor: pointer; }
+        .menu-link { color: white; text-decoration: none; font-size: 18px; margin: 12px; font-weight: bold; cursor: pointer; }
         .menu-link:hover { color: var(--red); }
         h1 { font-size: 42px; margin-bottom: 30px; letter-spacing: 2px; font-weight: 900; text-transform: uppercase; }
         .red { color: var(--red); }
-        input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #333; background: #222; color: white; margin-bottom: 15px; outline: none; box-sizing: border-box; }
+        input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #333; background: #222; color: white; margin-bottom: 12px; outline: none; box-sizing: border-box; }
         .btn { width: 100%; padding: 16px; border: none; border-radius: 10px; font-weight: 900; cursor: pointer; background: var(--red); color: white; transition: 0.3s; }
-        #loader { display: none; margin-top: 20px; }
+        #server-panel, #payment-panel, #admin-panel { display: none; }
+        .server-list { max-height: 250px; overflow-y: auto; margin-bottom: 15px; }
+        .server-item, .pay-item { background: #252525; padding: 12px; border-radius: 12px; border: 1px solid #333; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
+        .active { border-color: var(--red); background: #350505; }
+        .flag-img { width: 40px; height: 25px; border-radius: 4px; object-fit: cover; background: #333; }
+        #loader { display: none; margin-top: 15px; }
         .progress-bg { width: 100%; height: 8px; background: #222; border-radius: 5px; overflow: hidden; }
         .progress-bar { width: 0%; height: 100%; background: var(--red); }
-        #success-mark { display: none; font-size: 60px; color: #00ff00; margin: 20px 0; }
-        #server-panel, #payment-panel { display: none; }
-        .server-item, .pay-item { background: #252525; padding: 12px; border-radius: 12px; border: 1px solid #333; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; gap: 15px; }
-        .active { border-color: var(--red); background: #350505; }
-        .flag-img { width: 40px; height: 25px; border-radius: 4px; object-fit: cover; }
-        .error { color: var(--red); font-size: 12px; margin-bottom: 10px; display: none; }
+        #success-mark { display: none; font-size: 50px; color: #00ff00; margin: 15px 0; }
+        .admin-box { background: #111; padding: 15px; border-radius: 10px; border: 1px dashed var(--red); }
     </style>
 </head>
 <body>
-
 <div class="container">
     <div class="menu-btn" id="m-btn" onclick="toggleMenu()"><div></div><div></div><div></div></div>
     <div class="menu-overlay" id="m-overlay">
-        <div class="menu-link" onclick="alert('Support: @virtux_admin')">ПОДДЕРЖКА</div>
-        <div class="menu-link" onclick="alert('VirtuX VPN 2026')">О НАС</div>
+        <div class="menu-link" onclick="showAdmin()" style="color: #ffcc00;">⚙ АДМИН-ПАНЕЛЬ</div>
         <div class="menu-link" onclick="showPayment()">ОПЛАТИТЬ ПОДПИСКУ</div>
+        <div class="menu-link" onclick="alert('Support: @virtux_admin')">ПОДДЕРЖКА</div>
         <div class="menu-link" onclick="toggleMenu()" style="color: grey; font-size: 14px;">НАЗАД</div>
     </div>
-
     <h1><span class="red">virtu</span>x vpn</h1>
-
     <div id="login-form">
-        <input type="text" id="user" placeholder="LOGIN (loqin)">
-        <input type="password" id="pass" placeholder="PASSWORD (house2233)">
-        <div id="login-err" class="error">INVALID CREDENTIALS</div>
+        <input type="text" id="user" placeholder="LOGIN">
+        <input type="password" id="pass" placeholder="PASSWORD">
         <button class="btn" onclick="login()">ENTER PANEL</button>
     </div>
-
     <div id="server-panel">
-        <div id="server-list">
+        <div class="server-list" id="main-server-list">
             <div class="server-item" onclick="select(this)"><img src="https://flagcdn.com" class="flag-img"> GERMANY</div>
-            <div class="server-item" onclick="select(this)"><img src="https://flagcdn.com" class="flag-img"> USA</div>
             <div class="server-item" onclick="select(this)"><img src="https://flagcdn.com" class="flag-img"> RUSSIA</div>
-            <div class="server-item" onclick="select(this)"><img src="https://cdn-icons-png.flaticon.com" class="flag-img"> DISCORD</div>
         </div>
         <div id="loader">
             <div class="progress-bg"><div class="progress-bar" id="p-bar"></div></div>
-            <p style="font-size: 10px; color: var(--red);">CONNECTING...</p>
+            <p style="font-size: 10px; color: var(--red); margin-top: 10px;">ESTABLISHING ENCRYPTION...</p>
         </div>
         <div id="success-mark">✔</div>
-        <button id="conn-btn" class="btn" style="margin-top:20px" onclick="startConnect()">CONNECT</button>
+        <button id="conn-btn" class="btn" onclick="startConnect()">CONNECT</button>
     </div>
-
     <div id="payment-panel">
-        <div class="pay-item"><img src="https://cdn-icons-png.flaticon.com" width="25"> CRYPTO</div>
-        <div class="pay-item"><img src="https://cdn-icons-png.flaticon.com" width="25"> CARD</div>
-        <button class="btn" style="background:none; border:1px solid #333; margin-top:20px" onclick="backToServers()">BACK</button>
+        <h3 style="color: var(--red);">ВЫБОР ОПЛАТЫ</h3>
+        <div class="pay-item" onclick="alert('Перенаправление на СБП...')"><img src="https://upload.wikimedia.org" width="35" style="background:white; padding:2px; border-radius:4px;"> СБП (Россия)</div>
+        <div class="pay-item" onclick="alert('Оплата USDT...')"><img src="https://cdn-icons-png.flaticon.com" width="30"> CRYPTO (USDT)</div>
+        <div class="pay-item" onclick="alert('Оплата Картой...')"><img src="https://cdn-icons-png.flaticon.com" width="30"> КАРТА (МИР/VISA)</div>
+        <button class="btn" style="background:none; border:1px solid #333; margin-top:15px" onclick="backToServers()">НАЗАД</button>
+    </div>
+    <div id="admin-panel">
+        <div class="admin-box">
+            <h4 style="margin-top:0">ДОБАВИТЬ СЕРВЕР</h4>
+            <input type="text" id="new-name" placeholder="Название (USA)">
+            <input type="text" id="new-photo" placeholder="Ссылка на фото (URL)">
+            <button class="btn" style="background: #222; border: 1px solid var(--red);" onclick="addServer()">СОХРАНИТЬ</button>
+        </div>
+        <button class="btn" style="background:none; margin-top:15px" onclick="backToServers()">ВЕРНУТЬСЯ К VPN</button>
     </div>
 </div>
-
 <script>
     function login() {
         const u = document.getElementById('user').value.trim();
@@ -77,40 +80,48 @@
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('server-panel').style.display = 'block';
             document.getElementById('m-btn').style.display = 'block';
-        } else {
-            document.getElementById('login-err').style.display = 'block';
-        }
+        } else { alert('ОШИБКА ДОСТУПА'); }
     }
-
     function toggleMenu() {
         const ov = document.getElementById('m-overlay');
         ov.style.display = (ov.style.display === 'flex') ? 'none' : 'flex';
     }
-
     function select(el) {
         document.querySelectorAll('.server-item').forEach(s => s.classList.remove('active'));
         el.classList.add('active');
     }
-
     function startConnect() {
-        if(!document.querySelector('.active')) return alert('Select server!');
+        if(!document.querySelector('.active')) return alert('Выберите сервер!');
         document.getElementById('conn-btn').style.display = 'none';
-        document.getElementById('server-list').style.opacity = '0.2';
+        document.getElementById('main-server-list').style.opacity = '0.2';
         document.getElementById('loader').style.display = 'block';
         let w = 0;
         let int = setInterval(() => {
             w++;
             document.getElementById('p-bar').style.width = w + '%';
-            if(w >= 100) {
-                clearInterval(int);
-                document.getElementById('loader').style.display = 'none';
-                document.getElementById('success-mark').style.display = 'block';
-            }
-        }, 60); // ~6 секунд
+            if(w >= 100) { clearInterval(int); document.getElementById('loader').style.display = 'none'; document.getElementById('success-mark').style.display = 'block'; }
+        }, 70); 
     }
-
-    function showPayment() { toggleMenu(); document.getElementById('server-panel').style.display = 'none'; document.getElementById('payment-panel').style.display = 'block'; }
-    function backToServers() { document.getElementById('payment-panel').style.display = 'none'; document.getElementById('server-panel').style.display = 'block'; }
+    function addServer() {
+        const name = document.getElementById('new-name').value;
+        const photo = document.getElementById('new-photo').value;
+        if(!name || !photo) return alert('Заполни все поля!');
+        const list = document.getElementById('main-server-list');
+        const newItem = document.createElement('div');
+        newItem.className = 'server-item';
+        newItem.onclick = function() { select(this); };
+        newItem.innerHTML = `<img src="${photo}" class="flag-img"> ${name.toUpperCase()}`;
+        list.appendChild(newItem);
+        backToServers();
+    }
+    function showAdmin() { toggleMenu(); hideAll(); document.getElementById('admin-panel').style.display = 'block'; }
+    function showPayment() { toggleMenu(); hideAll(); document.getElementById('payment-panel').style.display = 'block'; }
+    function backToServers() { hideAll(); document.getElementById('server-panel').style.display = 'block'; }
+    function hideAll() {
+        document.getElementById('server-panel').style.display = 'none';
+        document.getElementById('payment-panel').style.display = 'none';
+        document.getElementById('admin-panel').style.display = 'none';
+    }
 </script>
 </body>
 </html>
