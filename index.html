@@ -7,46 +7,44 @@
         body { background-color: #0c0c0c; color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .container { 
             background-color: #1a1a1a; padding: 40px; border-radius: 20px; 
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.4); width: 380px; 
+            box-shadow: 0 0 35px rgba(255, 0, 0, 0.5); width: 380px; 
             text-align: center; border: 2px solid #ff0000; 
         }
-        h1 { font-size: 40px; margin-bottom: 30px; letter-spacing: 2px; font-weight: 900; text-transform: uppercase; }
+        h1 { font-size: 42px; margin-bottom: 30px; letter-spacing: 2px; font-weight: 900; text-transform: uppercase; }
         .red-text { color: #ff0000; }
         .white-text { color: #ffffff; }
 
-        .input-group { margin-bottom: 20px; text-align: left; }
-        label { display: block; font-size: 11px; color: #777; margin-bottom: 8px; font-weight: bold; }
         input { 
             width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #333; 
-            background: #222; color: white; box-sizing: border-box; outline: none; font-size: 16px;
+            background: #222; color: white; box-sizing: border-box; outline: none; font-size: 16px; margin-bottom: 15px;
         }
         input:focus { border-color: #ff0000; }
 
-        .btn { 
+        .btn-connect { 
             width: 100%; padding: 16px; border: none; border-radius: 10px; 
-            font-weight: 900; cursor: pointer; transition: 0.3s; font-size: 14px; 
+            font-weight: 900; cursor: pointer; transition: 0.3s; font-size: 14px;
+            background-color: #ff0000; color: white;
         }
-        .btn-connect { background-color: #ff0000; color: white; margin-top: 10px; }
         .btn-connect:hover { background-color: #cc0000; transform: scale(1.02); }
 
         #server-panel { display: none; }
+        .server-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
         
-        .server-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; max-height: 300px; overflow-y: auto; padding-right: 5px; }
         .server-item { 
             background: #252525; padding: 15px; border-radius: 12px; border: 1px solid #333; 
             cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 15px;
         }
-        .server-item:hover { border-color: #ff0000; background: #2a1010; }
+        .server-item:hover { border-color: #ff0000; }
         .server-item.active { border-color: #ff0000; background: #350505; box-shadow: 0 0 15px rgba(255,0,0,0.3); }
 
-        .flag-img { width: 45px; height: 30px; border-radius: 4px; object-fit: cover; border: 1px solid #444; }
-        .server-info { text-align: left; }
+        /* Сюда вставляешь ссылки на фото/гитхаб */
+        .flag-img { width: 50px; height: 35px; border-radius: 6px; object-fit: cover; background: #333; }
+        
+        .server-info { text-align: left; flex-grow: 1; }
         .server-name { display: block; font-weight: bold; font-size: 14px; }
-        .server-status { font-size: 10px; color: #00ff00; }
+        .ping-box { font-size: 11px; color: #ff0000; font-family: monospace; }
 
-        .error { color: #ff0000; font-size: 12px; margin-top: 15px; display: none; font-weight: bold; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #ff0000; border-radius: 10px; }
+        .error { color: #ff0000; font-size: 12px; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -54,54 +52,46 @@
 <div class="container">
     <h1><span class="red-text">virtu</span><span class="white-text">x</span> <span class="white-text">vpn</span></h1>
 
-    <!-- ФОРМА ВХОДА -->
     <div id="login-form">
-        <div class="input-group">
-            <label>ADMIN LOGIN</label>
-            <input type="text" id="user" placeholder="Login">
-        </div>
-        <div class="input-group">
-            <label>PASSWORD</label>
-            <input type="password" id="pass" placeholder="Password">
-        </div>
-        <button class="btn btn-connect" onclick="login()">ENTER PANEL</button>
-        <div id="login-err" class="error">ACCESS DENIED</div>
+        <input type="text" id="user" placeholder="LOGIN">
+        <input type="password" id="pass" placeholder="PASSWORD">
+        <button class="btn-connect" onclick="login()">ENTER PANEL</button>
+        <div id="login-err" class="error">WRONG AUTH</div>
     </div>
 
-    <!-- ВЫБОР СЕРВЕРОВ -->
     <div id="server-panel">
-        <label>AVAILABLE LOCATIONS</label>
         <div class="server-list">
+            <!-- Замени src на свои ссылки из GitHub, если эти не грузятся -->
             <div class="server-item" onclick="select(this)">
                 <img src="https://flagcdn.com" class="flag-img">
                 <div class="server-info">
-                    <span class="server-name">Germany, Frankfurt</span>
-                    <span class="server-status">Online (12ms)</span>
+                    <span class="server-name">GERMANY, FRANKFURT</span>
+                    <span class="ping-box">PING: <span class="ping-val">15</span>ms</span>
                 </div>
             </div>
             <div class="server-item" onclick="select(this)">
                 <img src="https://flagcdn.com" class="flag-img">
                 <div class="server-info">
-                    <span class="server-name">USA, New York</span>
-                    <span class="server-status">Online (98ms)</span>
+                    <span class="server-name">USA, VIRGINIA</span>
+                    <span class="ping-box">PING: <span class="ping-val">110</span>ms</span>
                 </div>
             </div>
             <div class="server-item" onclick="select(this)">
                 <img src="https://flagcdn.com" class="flag-img">
                 <div class="server-info">
-                    <span class="server-name">Russia, Moscow</span>
-                    <span class="server-status">Online (5ms)</span>
+                    <span class="server-name">RUSSIA, MOSCOW</span>
+                    <span class="ping-box">PING: <span class="ping-val">8</span>ms</span>
                 </div>
             </div>
             <div class="server-item" onclick="select(this)">
                 <img src="https://cdn-icons-png.flaticon.com" class="flag-img">
                 <div class="server-info">
-                    <span class="server-name">Discord Tunnel</span>
-                    <span class="server-status">Optimized</span>
+                    <span class="server-name">DISCORD BYPASS</span>
+                    <span class="ping-box">PING: <span class="ping-val">22</span>ms</span>
                 </div>
             </div>
         </div>
-        <button class="btn btn-connect" style="margin-top: 25px;" onclick="alert('Connecting...')">CONNECT NOW</button>
+        <button id="conn-btn" class="btn-connect" style="margin-top: 20px;">START VPN</button>
     </div>
 </div>
 
@@ -112,15 +102,26 @@
         if(u === 'loqin' && p === 'house2233') {
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('server-panel').style.display = 'block';
+            startPingUpdate();
         } else {
             document.getElementById('login-err').style.display = 'block';
-            setTimeout(() => document.getElementById('login-err').style.display = 'none', 2000);
         }
     }
 
     function select(el) {
         document.querySelectorAll('.server-item').forEach(s => s.classList.remove('active'));
         el.classList.add('active');
+    }
+
+    // Рандомное обновление пинга для вида
+    function startPingUpdate() {
+        setInterval(() => {
+            document.querySelectorAll('.ping-val').forEach(span => {
+                let current = parseInt(span.innerText);
+                let shift = Math.floor(Math.random() * 5) - 2; // +/- 2ms
+                span.innerText = Math.max(5, current + shift);
+            });
+        }, 2000);
     }
 </script>
 
