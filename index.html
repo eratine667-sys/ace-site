@@ -4,111 +4,124 @@
     <meta charset="UTF-8">
     <title>VirtuX VPN</title>
     <style>
-        body { background-color: #0b0b0b; color: white; font-family: 'Arial Black', Gadget, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background-color: #151515; padding: 40px; border-radius: 20px; box-shadow: 0 0 40px rgba(255,0,0,0.2); width: 420px; text-align: center; border: 1px solid #222; }
-        
-        .logo { font-size: 45px; margin-bottom: 30px; letter-spacing: -2px; }
-        .red { color: #ff0000; }
-        .white { color: #ffffff; }
-
-        .input-box { margin-bottom: 20px; text-align: left; }
-        label { font-size: 10px; color: #555; letter-spacing: 2px; margin-left: 5px; }
-        input { width: 100%; padding: 15px; border-radius: 5px; border: 1px solid #333; background: #000; color: #ff0000; box-sizing: border-box; outline: none; margin-top: 5px; }
-        
-        .btn-main { width: 100%; padding: 18px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; background: #ff0000; color: white; font-size: 16px; transition: 0.2s; }
-        .btn-main:hover { background: #b30000; transform: scale(1.02); }
-
-        #panel { display: none; }
-        .server-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        
-        .server-card { 
-            background: #1a1a1a; padding: 20px; border-radius: 10px; border: 1px solid #333; 
-            cursor: pointer; transition: 0.3s; position: relative; overflow: hidden;
+        body { background-color: #0c0c0c; color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { 
+            background-color: #1a1a1a; padding: 40px; border-radius: 20px; 
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.4); width: 380px; 
+            text-align: center; border: 2px solid #ff0000; 
         }
-        .server-card:hover { border-color: #ff0000; }
-        .server-card.active { border-color: #ff0000; background: #250000; box-shadow: 0 0 15px rgba(255,0,0,0.4); }
-        
-        .flag { font-size: 30px; display: block; margin-bottom: 10px; }
-        .name { font-size: 12px; text-transform: uppercase; color: #ccc; }
-        
-        .status-led { width: 10px; height: 10px; background: #333; border-radius: 50%; display: inline-block; margin-right: 10px; }
-        .active .status-led { background: #ff0000; box-shadow: 0 0 8px #ff0000; }
+        h1 { font-size: 40px; margin-bottom: 30px; letter-spacing: 2px; font-weight: 900; text-transform: uppercase; }
+        .red-text { color: #ff0000; }
+        .white-text { color: #ffffff; }
 
-        .error-msg { color: #ff0000; font-size: 12px; margin-top: 15px; display: none; text-transform: uppercase; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-size: 11px; color: #777; margin-bottom: 8px; font-weight: bold; }
+        input { 
+            width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #333; 
+            background: #222; color: white; box-sizing: border-box; outline: none; font-size: 16px;
+        }
+        input:focus { border-color: #ff0000; }
+
+        .btn { 
+            width: 100%; padding: 16px; border: none; border-radius: 10px; 
+            font-weight: 900; cursor: pointer; transition: 0.3s; font-size: 14px; 
+        }
+        .btn-connect { background-color: #ff0000; color: white; margin-top: 10px; }
+        .btn-connect:hover { background-color: #cc0000; transform: scale(1.02); }
+
+        #server-panel { display: none; }
+        
+        .server-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; max-height: 300px; overflow-y: auto; padding-right: 5px; }
+        .server-item { 
+            background: #252525; padding: 15px; border-radius: 12px; border: 1px solid #333; 
+            cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 15px;
+        }
+        .server-item:hover { border-color: #ff0000; background: #2a1010; }
+        .server-item.active { border-color: #ff0000; background: #350505; box-shadow: 0 0 15px rgba(255,0,0,0.3); }
+
+        .flag-img { width: 45px; height: 30px; border-radius: 4px; object-fit: cover; border: 1px solid #444; }
+        .server-info { text-align: left; }
+        .server-name { display: block; font-weight: bold; font-size: 14px; }
+        .server-status { font-size: 10px; color: #00ff00; }
+
+        .error { color: #ff0000; font-size: 12px; margin-top: 15px; display: none; font-weight: bold; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #ff0000; border-radius: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="logo"><span class="red">virtu</span><span class="white">x</span> <span class="white">vpn</span></div>
+    <h1><span class="red-text">virtu</span><span class="white-text">x</span> <span class="white-text">vpn</span></h1>
 
-    <!-- LOGIN SECTION -->
-    <div id="auth">
-        <div class="input-box">
-            <label>ADMIN IDENTIFIER</label>
-            <input type="text" id="username" placeholder="LOGIN">
+    <!-- ФОРМА ВХОДА -->
+    <div id="login-form">
+        <div class="input-group">
+            <label>ADMIN LOGIN</label>
+            <input type="text" id="user" placeholder="Login">
         </div>
-        <div class="input-box">
-            <label>SECRET KEY</label>
-            <input type="password" id="password" placeholder="PASSWORD">
+        <div class="input-group">
+            <label>PASSWORD</label>
+            <input type="password" id="pass" placeholder="Password">
         </div>
-        <button class="btn-main" onclick="checkAuth()">ENTER PANEL</button>
-        <div id="err" class="error-msg">ACCESS DENIED: INVALID CREDENTIALS</div>
+        <button class="btn btn-connect" onclick="login()">ENTER PANEL</button>
+        <div id="login-err" class="error">ACCESS DENIED</div>
     </div>
 
-    <!-- SERVER SELECTION SECTION -->
-    <div id="panel">
-        <div style="font-size: 11px; color: #ff0000; margin-bottom: 20px;">SYSTEM ONLINE - SELECT NODE</div>
-        <div class="server-grid">
-            <div class="server-card" onclick="connect(this)">
-                <span class="flag">🇩🇪</span>
-                <span class="name">Germany</span>
-                <div class="status-led"></div>
+    <!-- ВЫБОР СЕРВЕРОВ -->
+    <div id="server-panel">
+        <label>AVAILABLE LOCATIONS</label>
+        <div class="server-list">
+            <div class="server-item" onclick="select(this)">
+                <img src="https://flagcdn.com" class="flag-img">
+                <div class="server-info">
+                    <span class="server-name">Germany, Frankfurt</span>
+                    <span class="server-status">Online (12ms)</span>
+                </div>
             </div>
-            <div class="server-card" onclick="connect(this)">
-                <span class="flag">🇺🇸</span>
-                <span class="name">USA</span>
-                <div class="status-led"></div>
+            <div class="server-item" onclick="select(this)">
+                <img src="https://flagcdn.com" class="flag-img">
+                <div class="server-info">
+                    <span class="server-name">USA, New York</span>
+                    <span class="server-status">Online (98ms)</span>
+                </div>
             </div>
-            <div class="server-card" onclick="connect(this)">
-                <span class="flag">🇷🇺</span>
-                <span class="name">Russia</span>
-                <div class="status-led"></div>
+            <div class="server-item" onclick="select(this)">
+                <img src="https://flagcdn.com" class="flag-img">
+                <div class="server-info">
+                    <span class="server-name">Russia, Moscow</span>
+                    <span class="server-status">Online (5ms)</span>
+                </div>
             </div>
-            <div class="server-card" onclick="connect(this)">
-                <span class="flag">👾</span>
-                <span class="name">Discord</span>
-                <div class="status-led"></div>
+            <div class="server-item" onclick="select(this)">
+                <img src="https://cdn-icons-png.flaticon.com" class="flag-img">
+                <div class="server-info">
+                    <span class="server-name">Discord Tunnel</span>
+                    <span class="server-status">Optimized</span>
+                </div>
             </div>
         </div>
-        <button class="btn-main" style="margin-top:30px; background: none; border: 1px solid #333;" onclick="location.reload()">LOGOUT</button>
+        <button class="btn btn-connect" style="margin-top: 25px;" onclick="alert('Connecting...')">CONNECT NOW</button>
     </div>
 </div>
 
 <script>
-function checkAuth() {
-    const u = document.getElementById('username').value;
-    const p = document.getElementById('password').value;
-    
-    // Прямая проверка данных
-    if (u === 'loqin' && p === 'house2233') {
-        document.getElementById('auth').style.display = 'none';
-        document.getElementById('panel').style.display = 'block';
-    } else {
-        const error = document.getElementById('err');
-        error.style.display = 'block';
-        setTimeout(() => { error.style.display = 'none'; }, 2000);
+    function login() {
+        const u = document.getElementById('user').value;
+        const p = document.getElementById('pass').value;
+        if(u === 'loqin' && p === 'house2233') {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('server-panel').style.display = 'block';
+        } else {
+            document.getElementById('login-err').style.display = 'block';
+            setTimeout(() => document.getElementById('login-err').style.display = 'none', 2000);
+        }
     }
-}
 
-function connect(element) {
-    // Убираем активный статус у всех и ставим нажатому
-    document.querySelectorAll('.server-card').forEach(card => card.classList.remove('active'));
-    element.classList.add('active');
-    
-    // Можно добавить звук или вибрацию для эффекта
-    console.log("Connecting to: " + element.querySelector('.name').innerText);
-}
+    function select(el) {
+        document.querySelectorAll('.server-item').forEach(s => s.classList.remove('active'));
+        el.classList.add('active');
+    }
 </script>
 
 </body>
