@@ -13,8 +13,9 @@
         .screen { display: none; height: 100%; flex-direction: column; animation: fadeIn 0.5s ease; }
         .active-screen { display: flex; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        h1 { font-size: 38px; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; margin: 20px 0; }
+        h1 { font-size: 32px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; margin: 20px 0; line-height: 1.2; }
         .accent { color: var(--main); }
+        .white { color: #ffffff; }
         input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #1a1a1a; color: white; margin-bottom: 12px; outline: none; }
         input:focus { border-color: var(--main); box-shadow: 0 0 10px var(--main); }
         .btn { width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; background: var(--main); color: white; text-transform: uppercase; transition: 0.2s; }
@@ -44,6 +45,7 @@
         <input type="text" id="chat-in" placeholder="Чат..." style="padding:5px; font-size:10px; margin:0; height:25px;" onkeypress="if(event.key==='Enter') sendChat()">
     </div>
     <div id="menu" class="menu-overlay">
+        <h2 style="color:var(--main); margin-bottom:20px;">VIRTUX VPN</h2>
         <div class="menu-link" onclick="toggleTheme()">🌓 СМЕНИТЬ ТЕМУ</div>
         <div class="menu-link" onclick="nav('scr-pay'); toggleMenu()">💳 ПЛАН ОБНОВЛЕНИЯ</div>
         <div class="menu-link" onclick="nav('scr-adm'); toggleMenu()">⚙ ПАНЕЛЬ АДМИНИСТРАТОРА</div>
@@ -51,21 +53,21 @@
         <div class="menu-link" onclick="toggleMenu()" style="border: 1px solid #333; padding: 10px 30px; border-radius: 10px; margin-top: 20px;">ЗАКРЫТЬ</div>
     </div>
     <div id="scr-reg" class="screen active-screen">
-        <h1>VIRTU<span class="accent">X</span></h1>
+        <h1>VIRTU<span class="accent">X</span> <span class="white">VPN</span></h1>
         <input type="text" id="reg-user" placeholder="Логин (6-35 символов)">
         <input type="password" id="reg-pass" placeholder="Пароль (6-35 символов)">
         <button class="btn" onclick="register()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
         <p style="margin-top:20px; font-size:12px; cursor:pointer;" onclick="nav('scr-login')">Уже есть аккаунт? Войти</p>
     </div>
     <div id="scr-login" class="screen">
-        <h1>V<span class="accent">X</span> LOGIN</h1>
+        <h1>VIRTU<span class="accent">X</span> <span class="white">VPN</span></h1>
         <input type="text" id="login-user" placeholder="Логин">
         <input type="password" id="login-pass" placeholder="Пароль">
         <button class="btn" onclick="login()">ВОЙТИ В СИСТЕМУ</button>
         <p style="margin-top:20px; font-size:12px; cursor:pointer;" onclick="nav('scr-reg')">Назад к регистрации</p>
     </div>
     <div id="scr-dev" class="screen">
-        <h1>УСТРОЙ<span class="accent">СТВО</span></h1>
+        <h1>VIRTUX <span class="accent">DEVICE</span></h1>
         <div class="item-list">
             <div class="item" onclick="sel(this)"><img src="https://cdn-icons-png.flaticon.com" class="flag"> WINDOWS</div>
             <div class="item" onclick="sel(this)"><img src="https://cdn-icons-png.flaticon.com" class="flag"> ANDROID</div>
@@ -74,7 +76,7 @@
         <button class="btn" onclick="nav('scr-vpn')">ДАЛЕЕ</button>
     </div>
     <div id="scr-vpn" class="screen">
-        <h1>ПОДКЛЮ<span class="accent">ЧЕНИЕ</span></h1>
+        <h1>VIRTUX <span class="accent">CONNECT</span></h1>
         <div class="item-list" id="srv-list">
             <div class="item" onclick="sel(this)"><img src="https://flagcdn.com" class="flag"> ГЕРМАНИЯ <span style="margin-left:auto; color:var(--main); font-size:11px;">15ms</span></div>
             <div class="item" onclick="sel(this)"><img src="https://flagcdn.com" class="flag"> РОССИЯ <span style="margin-left:auto; color:var(--main); font-size:11px;">5ms</span></div>
@@ -84,12 +86,12 @@
         <button class="btn" id="c-btn" onclick="connect()">ПОДКЛЮЧИТЬСЯ</button>
     </div>
     <div id="scr-adm" class="screen">
-        <h1>АДМИН<span class="accent">КА</span></h1>
+        <h1>VIRTUX <span class="accent">ADMIN</span></h1>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;"><div style="background:#111; padding:10px; border-radius:10px;">ЮЗЕРЫ<br><b id="st-u" class="accent">0</b></div><div style="background:#111; padding:10px; border-radius:10px;">НАГРУЗКА<br><b id="st-l" class="accent">0%</b></div></div>
         <input type="text" id="adm-n" placeholder="Имя сервера"><input type="text" id="adm-p" placeholder="Ссылка на фото"><button class="btn" onclick="addSrv()">ДОБАВИТЬ</button><button class="btn" style="background:none; border:1px solid #333; margin-top:10px; color:#555;" onclick="nav('scr-vpn')">НАЗАД</button>
     </div>
     <div id="scr-pay" class="screen">
-        <h1>ОПЛА<span class="accent">ТА</span></h1>
+        <h1>VIRTUX <span class="accent">PREMIUM</span></h1>
         <div class="item" onclick="toast('Переход к СБП...')">💳 СБП / КАРТЫ РФ</div>
         <div class="item" onclick="toast('Кошелек скопирован!')">₿ КРИПТОВАЛЮТА</div>
         <button class="btn" style="background:none; border:1px solid #333; margin-top:10px; color:#555;" onclick="nav('scr-vpn')">НАЗАД</button>
