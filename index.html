@@ -1,263 +1,115 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VirtuX VPN | Future Protocol</title>
+    <title>VirtuX VPN</title>
     <style>
         :root { --main: #ff0000; --bg: #080808; --card: #121212; --text: #ffffff; }
         .blue-theme { --main: #00d9ff; --bg: #000a12; --card: #011627; }
-        
-        * { box-sizing: border-box; transition: background 0.3s, border 0.3s; }
+        * { box-sizing: border-box; transition: 0.3s; }
         body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
-        
-        .container { 
-            background-color: var(--card); padding: 30px; border-radius: 20px; 
-            box-shadow: 0 0 40px rgba(0,0,0,0.5), 0 0 20px var(--main); 
-            width: 420px; text-align: center; border: 2px solid var(--main); 
-            position: relative; overflow: hidden;
-        }
-
-        .screen { display: none; animation: fadeIn 0.5s ease; }
-        .active-screen { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        h1 { font-size: 35px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 25px; }
+        .container { background-color: var(--card); padding: 30px; border-radius: 20px; box-shadow: 0 0 40px rgba(0,0,0,0.5), 0 0 20px var(--main); width: 440px; text-align: center; border: 2px solid var(--main); position: relative; overflow: hidden; height: 650px; }
+        .screen { display: none; height: 100%; flex-direction: column; animation: fadeIn 0.5s ease; }
+        .active-screen { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        h1 { font-size: 38px; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; margin: 20px 0; }
         .accent { color: var(--main); }
-
-        input, select { 
-            width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #333; 
-            background: #1a1a1a; color: white; margin-bottom: 15px; outline: none; 
-        }
+        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #1a1a1a; color: white; margin-bottom: 12px; outline: none; }
         input:focus { border-color: var(--main); box-shadow: 0 0 10px var(--main); }
-
-        .btn { 
-            width: 100%; padding: 16px; border: none; border-radius: 12px; 
-            font-weight: 900; cursor: pointer; background: var(--main); 
-            color: white; text-transform: uppercase; transition: 0.3s;
-        }
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; background: var(--main); color: white; text-transform: uppercase; transition: 0.2s; }
         .btn:hover { filter: brightness(1.2); transform: scale(1.02); }
-
-        .nav-btn { position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 24px; z-index: 100; }
-
-        /* Чат */
-        .chat-box { height: 150px; background: #000; border-radius: 10px; overflow-y: auto; padding: 10px; text-align: left; font-size: 12px; margin-bottom: 10px; border: 1px solid #222; }
-        .chat-msg { margin-bottom: 5px; border-left: 2px solid var(--main); padding-left: 5px; }
+        .nav-btn { position: absolute; top: 25px; right: 25px; cursor: pointer; font-size: 28px; z-index: 1000; display: none; }
+        #chat-container { position: absolute; top: 20px; left: 20px; width: 150px; z-index: 99; display: none; text-align: left; }
+        .chat-box { height: 120px; background: rgba(0,0,0,0.7); border-radius: 8px; overflow-y: auto; padding: 8px; font-size: 10px; border: 1px solid #222; backdrop-filter: blur(5px); margin-bottom: 5px; }
+        .chat-msg { margin-bottom: 4px; border-left: 2px solid var(--main); padding-left: 4px; word-wrap: break-word; }
         .chat-msg b { color: var(--main); }
-
-        /* Статистика */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .stat-card { background: #1a1a1a; padding: 10px; border-radius: 10px; border: 1px solid #333; }
-        .stat-val { font-size: 20px; font-weight: bold; color: var(--main); }
-
-        /* Уведомления */
-        #toast { 
-            position: fixed; bottom: 20px; right: 20px; background: var(--main); 
-            color: white; padding: 15px 25px; border-radius: 10px; 
-            font-weight: bold; display: none; animation: slideIn 0.3s ease;
-        }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-
-        .item-list { max-height: 200px; overflow-y: auto; margin-bottom: 15px; }
-        .item { background: #1a1a1a; padding: 12px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; border: 1px solid #333; }
-        .active-item { border-color: var(--main); background: #251010; }
-        .flag { width: 30px; height: 20px; margin-right: 10px; border-radius: 3px; }
+        .menu-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 900; display: none; flex-direction: column; justify-content: center; align-items: center; }
+        .menu-link { color: white; text-decoration: none; font-size: 18px; margin: 15px; font-weight: bold; cursor: pointer; }
+        .menu-link:hover { color: var(--main); }
+        .item-list { flex-grow: 1; overflow-y: auto; margin-bottom: 15px; padding: 5px; }
+        .item { background: #1a1a1a; padding: 14px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; border: 1px solid #333; }
+        .item:hover { border-color: var(--main); }
+        .active-item { border-color: var(--main); background: rgba(255,0,0,0.1); }
+        .flag { width: 35px; height: 22px; margin-right: 12px; border-radius: 3px; object-fit: cover; }
+        #toast { position: fixed; top: 20px; right: 20px; background: var(--main); color: white; padding: 15px 25px; border-radius: 10px; font-weight: bold; display: none; z-index: 2000; }
     </style>
 </head>
 <body>
-
-<div id="toast">Message here!</div>
-
-<div class="container" id="app">
-    <div class="nav-btn" onclick="toggleMenu()">☰</div>
-
-    <!-- Регистрация -->
+<div id="toast"></div>
+<div class="container">
+    <div class="nav-btn" id="burger" onclick="toggleMenu()">☰</div>
+    <div id="chat-container">
+        <div class="chat-box" id="chat"></div>
+        <input type="text" id="chat-in" placeholder="Чат..." style="padding:5px; font-size:10px; margin:0; height:25px;" onkeypress="if(event.key==='Enter') sendChat()">
+    </div>
+    <div id="menu" class="menu-overlay">
+        <div class="menu-link" onclick="toggleTheme()">🌓 СМЕНИТЬ ТЕМУ</div>
+        <div class="menu-link" onclick="nav('scr-pay'); toggleMenu()">💳 ПЛАН ОБНОВЛЕНИЯ</div>
+        <div class="menu-link" onclick="nav('scr-adm'); toggleMenu()">⚙ ПАНЕЛЬ АДМИНИСТРАТОРА</div>
+        <div class="menu-link" onclick="location.reload()" style="color: #666;">ВЫХОД</div>
+        <div class="menu-link" onclick="toggleMenu()" style="border: 1px solid #333; padding: 10px 30px; border-radius: 10px; margin-top: 20px;">ЗАКРЫТЬ</div>
+    </div>
     <div id="scr-reg" class="screen active-screen">
         <h1>VIRTU<span class="accent">X</span></h1>
-        <p style="font-size: 12px; color: #666;">CREATE PRIVATE ACCOUNT</p>
-        <input type="text" id="reg-user" placeholder="Username (6-35 chars)">
-        <input type="password" id="reg-pass" placeholder="Password (6-35 chars)">
-        <button class="btn" onclick="register()">SIGN UP</button>
-        <p style="font-size: 11px; margin-top: 15px; cursor: pointer;" onclick="nav('scr-login')">Already have an account? Login</p>
+        <input type="text" id="reg-user" placeholder="Логин (6-35 символов)">
+        <input type="password" id="reg-pass" placeholder="Пароль (6-35 символов)">
+        <button class="btn" onclick="register()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+        <p style="margin-top:20px; font-size:12px; cursor:pointer;" onclick="nav('scr-login')">Уже есть аккаунт? Войти</p>
     </div>
-
-    <!-- Логин -->
     <div id="scr-login" class="screen">
-        <h1>LOG<span class="accent">IN</span></h1>
-        <input type="text" id="login-user" placeholder="Username">
-        <input type="password" id="login-pass" placeholder="Password">
-        <button class="btn" onclick="login()">ENTER SYSTEM</button>
+        <h1>V<span class="accent">X</span> LOGIN</h1>
+        <input type="text" id="login-user" placeholder="Логин">
+        <input type="password" id="login-pass" placeholder="Пароль">
+        <button class="btn" onclick="login()">ВОЙТИ В СИСТЕМУ</button>
+        <p style="margin-top:20px; font-size:12px; cursor:pointer;" onclick="nav('scr-reg')">Назад к регистрации</p>
     </div>
-
-    <!-- Выбор устройства -->
     <div id="scr-dev" class="screen">
-        <h1>DEVI<span class="accent">CE</span></h1>
-        <div class="item-list" id="dev-list">
-            <div class="item" onclick="sel(this, 'dev')">💻 WINDOWS</div>
-            <div class="item" onclick="sel(this, 'dev')">📱 ANDROID</div>
-            <div class="item" onclick="sel(this, 'dev')">🍎 IOS / MAC</div>
+        <h1>УСТРОЙ<span class="accent">СТВО</span></h1>
+        <div class="item-list">
+            <div class="item" onclick="sel(this)"><img src="https://cdn-icons-png.flaticon.com" class="flag"> WINDOWS</div>
+            <div class="item" onclick="sel(this)"><img src="https://cdn-icons-png.flaticon.com" class="flag"> ANDROID</div>
+            <div class="item" onclick="sel(this)"><img src="https://cdn-icons-png.flaticon.com" class="flag"> IOS / MAC</div>
         </div>
-        <button class="btn" onclick="nav('scr-vpn')">CONTINUE</button>
+        <button class="btn" onclick="nav('scr-vpn')">ДАЛЕЕ</button>
     </div>
-
-    <!-- Главная VPN -->
     <div id="scr-vpn" class="screen">
-        <h1>CONNEC<span class="accent">T</span></h1>
+        <h1>ПОДКЛЮ<span class="accent">ЧЕНИЕ</span></h1>
         <div class="item-list" id="srv-list">
-            <div class="item" onclick="sel(this, 'srv')"><img src="https://flagcdn.com" class="flag"> GERMANY <span style="margin-left:auto; color:var(--main)">12ms</span></div>
-            <div class="item" onclick="sel(this, 'srv')"><img src="https://flagcdn.com" class="flag"> USA <span style="margin-left:auto; color:var(--main)">95ms</span></div>
+            <div class="item" onclick="sel(this)"><img src="https://flagcdn.com" class="flag"> ГЕРМАНИЯ <span style="margin-left:auto; color:var(--main); font-size:11px;">15ms</span></div>
+            <div class="item" onclick="sel(this)"><img src="https://flagcdn.com" class="flag"> РОССИЯ <span style="margin-left:auto; color:var(--main); font-size:11px;">5ms</span></div>
         </div>
-        
-        <div id="loader" style="display:none; margin: 15px 0;">
-            <div class="progress-bg"><div id="p-bar" style="height:5px; background:var(--main); width:0%"></div></div>
-        </div>
-        
-        <div id="success" style="display:none; font-size:40px; color:#00ff00; margin:10px;">✔</div>
-        <button id="c-btn" class="btn" onclick="connect()">START VPN</button>
-
-        <div class="chat-box" id="chat"></div>
-        <div style="display:flex; gap:5px;">
-            <input type="text" id="chat-in" placeholder="Type to chat..." style="margin:0; font-size:12px;">
-            <button class="btn" style="width:60px; padding:0" onclick="sendChat()">></button>
-        </div>
+        <div id="loader" style="display:none; margin-bottom: 20px;"><div style="width:100%; height:4px; background:#222; border-radius:10px; overflow:hidden;"><div id="p-bar" style="width:0%; height:100%; background:var(--main); box-shadow:0 0 10px var(--main);"></div></div></div>
+        <div id="success" style="display:none; font-size:50px; color:#00ff00; margin-bottom:10px;">✔</div>
+        <button class="btn" id="c-btn" onclick="connect()">ПОДКЛЮЧИТЬСЯ</button>
     </div>
-
-    <!-- Админка -->
     <div id="scr-adm" class="screen">
-        <h1>STA<span class="accent">TS</span></h1>
-        <div class="stats-grid">
-            <div class="stat-card">USERS<br><span class="stat-val" id="st-u">1,240</span></div>
-            <div class="stat-card">LOAD<br><span class="stat-val" id="st-l">14%</span></div>
-        </div>
-        <div class="admin-box">
-            <input type="text" id="adm-n" placeholder="Server Name">
-            <input type="text" id="adm-p" placeholder="Photo URL">
-            <button class="btn" onclick="addSrv()">ADD SERVER</button>
-        </div>
-        <button class="btn" style="background:#333; margin-top:10px;" onclick="nav('scr-vpn')">BACK</button>
+        <h1>АДМИН<span class="accent">КА</span></h1>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;"><div style="background:#111; padding:10px; border-radius:10px;">ЮЗЕРЫ<br><b id="st-u" class="accent">0</b></div><div style="background:#111; padding:10px; border-radius:10px;">НАГРУЗКА<br><b id="st-l" class="accent">0%</b></div></div>
+        <input type="text" id="adm-n" placeholder="Имя сервера"><input type="text" id="adm-p" placeholder="Ссылка на фото"><button class="btn" onclick="addSrv()">ДОБАВИТЬ</button><button class="btn" style="background:none; border:1px solid #333; margin-top:10px; color:#555;" onclick="nav('scr-vpn')">НАЗАД</button>
     </div>
-
-    <!-- Оплата -->
     <div id="scr-pay" class="screen">
-        <h1>PAY<span class="accent">MENT</span></h1>
-        <div class="item" onclick="toast('Redirecting to SBP...')">💸 СБП / КАРТЫ</div>
-        <div class="item" onclick="toast('BTC: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa')">₿ CRYPTO</div>
-        <button class="btn" style="background:#333; margin-top:10px;" onclick="nav('scr-vpn')">BACK</button>
-    </div>
-
-    <!-- Меню Оверлей -->
-    <div id="menu" class="menu-overlay">
-        <div class="menu-link" onclick="toggleTheme()">🌓 CHANGE THEME</div>
-        <div class="menu-link" onclick="nav('scr-pay'); toggleMenu()">💳 UPGRADE PLAN</div>
-        <div class="menu-link" onclick="nav('scr-adm'); toggleMenu()">⚙ ADMIN PANEL</div>
-        <div class="menu-link" onclick="location.reload()">LOGOUT</div>
-        <div class="menu-link" onclick="toggleMenu()" style="color:#555">CLOSE</div>
+        <h1>ОПЛА<span class="accent">ТА</span></h1>
+        <div class="item" onclick="toast('Переход к СБП...')">💳 СБП / КАРТЫ РФ</div>
+        <div class="item" onclick="toast('Кошелек скопирован!')">₿ КРИПТОВАЛЮТА</div>
+        <button class="btn" style="background:none; border:1px solid #333; margin-top:10px; color:#555;" onclick="nav('scr-vpn')">НАЗАД</button>
     </div>
 </div>
-
 <script>
     let currentUser = null;
     let chatMsgs = JSON.parse(localStorage.getItem('vx_chat') || '[]');
-
-    function nav(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-        document.getElementById(id).classList.add('active-screen');
-    }
-
-    function toast(txt) {
-        const t = document.getElementById('toast');
-        t.innerText = txt; t.style.display = 'block';
-        setTimeout(() => t.style.display = 'none', 3000);
-    }
-
-    function register() {
-        const u = document.getElementById('reg-user').value;
-        const p = document.getElementById('reg-pass').value;
-        const regex = /^[a-zA-Z0-9]+$/;
-
-        if (u.length < 6 || u.length > 35 || !regex.test(u)) {
-            return toast("User: 6-35 symbols, English only!");
-        }
-        localStorage.setItem('user_' + u, p);
-        toast("Registered! Now Login.");
-        nav('scr-login');
-    }
-
-    function login() {
-        const u = document.getElementById('login-user').value;
-        const p = document.getElementById('login-pass').value;
-        if (localStorage.getItem('user_' + u) === p || (u === 'loqin' && p === 'house2233')) {
-            currentUser = u;
-            toast("Welcome, " + u);
-            nav('scr-dev');
-        } else { toast("Invalid credentials!"); }
-    }
-
-    function sel(el, type) {
-        const list = type === 'dev' ? '#dev-list .item' : '#srv-list .item';
-        document.querySelectorAll(list).forEach(i => i.classList.remove('active-item'));
-        el.classList.add('active-item');
-    }
-
-    function connect() {
-        if(!document.querySelector('#srv-list .active-item')) return toast("Select Server!");
-        document.getElementById('c-btn').style.display = 'none';
-        document.getElementById('loader').style.display = 'block';
-        let w = 0;
-        let int = setInterval(() => {
-            w += 2; document.getElementById('p-bar').style.width = w + '%';
-            if(w >= 100) { 
-                clearInterval(int); 
-                document.getElementById('loader').style.display = 'none';
-                document.getElementById('success').style.display = 'block';
-                toast("VPN STABLISHED");
-            }
-        }, 100);
-    }
-
-    function toggleMenu() {
-        const m = document.getElementById('menu');
-        m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
-    }
-
-    function toggleTheme() {
-        document.body.classList.toggle('blue-theme');
-        toast("Theme Changed!");
-    }
-
-    function sendChat() {
-        const inp = document.getElementById('chat-in');
-        if(!inp.value) return;
-        const msg = { u: currentUser || 'Guest', t: inp.value };
-        chatMsgs.push(msg);
-        if(chatMsgs.length > 20) chatMsgs.shift();
-        localStorage.setItem('vx_chat', JSON.stringify(chatMsgs));
-        inp.value = '';
-        renderChat();
-    }
-
-    function renderChat() {
-        const c = document.getElementById('chat');
-        c.innerHTML = chatMsgs.map(m => `<div class="chat-msg"><b>${m.u}:</b> ${m.t}</div>`).join('');
-        c.scrollTop = c.scrollHeight;
-    }
-
-    function addSrv() {
-        const n = document.getElementById('adm-n').value;
-        const p = document.getElementById('adm-p').value;
-        if(!n) return;
-        const list = document.getElementById('srv-list');
-        list.innerHTML += `<div class="item" onclick="sel(this, 'srv')"><img src="${p}" class="flag"> ${n.toUpperCase()} <span style="margin-left:auto; color:var(--main)">5ms</span></div>`;
-        toast("Server Added!");
-        nav('scr-vpn');
-    }
-
-    setInterval(() => {
-        document.getElementById('st-u').innerText = (Math.floor(Math.random() * 500) + 1000).toLocaleString();
-        document.getElementById('st-l').innerText = Math.floor(Math.random() * 30) + 5 + "%";
-    }, 3000);
-
-    renderChat();
+    function nav(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen')); document.getElementById(id).classList.add('active-screen'); }
+    function toast(txt) { const t = document.getElementById('toast'); t.innerText = txt; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3000); }
+    function register() { const u = document.getElementById('reg-user').value.trim(); const p = document.getElementById('reg-pass').value.trim(); if (u.length < 6 || u.length > 35 || !/^[a-zA-Z0-9]+$/.test(u)) return toast("Логин: 6-35 символов, латиница!"); localStorage.setItem('vx_u_' + u, p); toast("Успех! Войдите."); nav('scr-login'); }
+    function login() { const u = document.getElementById('login-user').value.trim(); const p = document.getElementById('login-pass').value.trim(); if (localStorage.getItem('vx_u_' + u) === p || (u === 'loqin' && p === 'house2233')) { currentUser = u; document.getElementById('burger').style.display = 'block'; document.getElementById('chat-container').style.display = 'block'; toast("Добро пожаловать!"); nav('scr-dev'); renderChat(); } else { toast("Ошибка входа!"); } }
+    function sel(el) { el.parentElement.querySelectorAll('.item').forEach(i => i.classList.remove('active-item')); el.classList.add('active-item'); }
+    function connect() { if(!document.querySelector('#srv-list .active-item')) return toast("Выберите сервер!"); document.getElementById('c-btn').style.display = 'none'; document.getElementById('loader').style.display = 'block'; let w = 0; let int = setInterval(() => { w += 2; document.getElementById('p-bar').style.width = w + '%'; if(w >= 100) { clearInterval(int); document.getElementById('loader').style.display = 'none'; document.getElementById('success').style.display = 'block'; toast("ЗАЩИЩЕНО"); } }, 80); }
+    function toggleMenu() { const m = document.getElementById('menu'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; }
+    function toggleTheme() { document.body.classList.toggle('blue-theme'); toast("Тема изменена"); }
+    function sendChat() { const inp = document.getElementById('chat-in'); if(!inp.value) return; chatMsgs.push({ u: currentUser, t: inp.value }); if(chatMsgs.length > 15) chatMsgs.shift(); localStorage.setItem('vx_chat', JSON.stringify(chatMsgs)); inp.value = ''; renderChat(); }
+    function renderChat() { const c = document.getElementById('chat'); c.innerHTML = chatMsgs.map(m => `<div class="chat-msg"><b>${m.u}:</b> ${m.t}</div>`).join(''); c.scrollTop = c.scrollHeight; }
+    function addSrv() { const n = document.getElementById('adm-n').value; const p = document.getElementById('adm-p').value; if(!n) return; document.getElementById('srv-list').innerHTML += `<div class="item" onclick="sel(this)"><img src="${p}" class="flag"> ${n.toUpperCase()} <span style="margin-left:auto; color:var(--main); font-size:11px;">ONLINE</span></div>`; toast("Сервер добавлен"); nav('scr-vpn'); }
+    setInterval(() => { document.getElementById('st-u').innerText = Math.floor(Math.random() * 2000 + 500); document.getElementById('st-l').innerText = Math.floor(Math.random() * 40 + 10) + "%"; }, 2000);
 </script>
 </body>
 </html>
