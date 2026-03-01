@@ -1,199 +1,263 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>VirtuX VPN</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VirtuX VPN | Future Protocol</title>
     <style>
-        :root { --red: #ff0000; --bg: #0c0c0c; --card: #1a1a1a; }
-        body { background-color: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
-        .container { background-color: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 0 35px rgba(255, 0, 0, 0.5); width: 420px; text-align: center; border: 2px solid var(--red); position: relative; }
-        .menu-btn { position: absolute; top: 25px; right: 25px; cursor: pointer; z-index: 100; display: none; }
-        .menu-btn div { width: 22px; height: 2px; background: white; margin: 5px; }
-        .menu-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 90; display: none; flex-direction: column; justify-content: center; align-items: center; border-radius: 18px; }
-        .menu-link { color: white; text-decoration: none; font-size: 18px; margin: 12px; font-weight: bold; cursor: pointer; }
-        h1 { font-size: 42px; margin-bottom: 30px; letter-spacing: 2px; font-weight: 900; text-transform: uppercase; }
-        .red { color: var(--red); }
-        input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #333; background: #222; color: white; margin-bottom: 12px; outline: none; box-sizing: border-box; }
-        .btn { width: 100%; padding: 16px; border: none; border-radius: 10px; font-weight: 900; cursor: pointer; background: var(--red); color: white; transition: 0.3s; text-transform: uppercase; }
-        #device-panel, #server-panel, #payment-panel, #admin-panel { display: none; }
-        .list-container { max-height: 260px; overflow-y: auto; margin-bottom: 15px; }
-        .grid-item { background: #222; padding: 15px; border-radius: 12px; border: 1px solid #333; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
-        .grid-item:hover { border-color: var(--red); }
-        .active { border-color: var(--red); background: #2a0a0a; }
-        .icon-img { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; }
-        .ping { margin-left: auto; font-size: 11px; color: var(--red); font-family: monospace; }
-        #loader { display: none; margin-top: 15px; }
-        .progress-bg { width: 100%; height: 6px; background: #333; border-radius: 10px; overflow: hidden; }
-        .progress-bar { width: 0%; height: 100%; background: var(--red); box-shadow: 0 0 10px var(--red); }
-        #success-mark { display: none; font-size: 60px; color: #00ff00; margin: 15px 0; }
-        .admin-box { background: #111; padding: 15px; border-radius: 12px; border: 1px dashed #444; margin-bottom: 15px; text-align: left; }
-        .del-btn { background: #333; color: #ff4444; border: 1px solid #444; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; }
+        :root { --main: #ff0000; --bg: #080808; --card: #121212; --text: #ffffff; }
+        .blue-theme { --main: #00d9ff; --bg: #000a12; --card: #011627; }
+        
+        * { box-sizing: border-box; transition: background 0.3s, border 0.3s; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        
+        .container { 
+            background-color: var(--card); padding: 30px; border-radius: 20px; 
+            box-shadow: 0 0 40px rgba(0,0,0,0.5), 0 0 20px var(--main); 
+            width: 420px; text-align: center; border: 2px solid var(--main); 
+            position: relative; overflow: hidden;
+        }
+
+        .screen { display: none; animation: fadeIn 0.5s ease; }
+        .active-screen { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { font-size: 35px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 25px; }
+        .accent { color: var(--main); }
+
+        input, select { 
+            width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #333; 
+            background: #1a1a1a; color: white; margin-bottom: 15px; outline: none; 
+        }
+        input:focus { border-color: var(--main); box-shadow: 0 0 10px var(--main); }
+
+        .btn { 
+            width: 100%; padding: 16px; border: none; border-radius: 12px; 
+            font-weight: 900; cursor: pointer; background: var(--main); 
+            color: white; text-transform: uppercase; transition: 0.3s;
+        }
+        .btn:hover { filter: brightness(1.2); transform: scale(1.02); }
+
+        .nav-btn { position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 24px; z-index: 100; }
+
+        /* Чат */
+        .chat-box { height: 150px; background: #000; border-radius: 10px; overflow-y: auto; padding: 10px; text-align: left; font-size: 12px; margin-bottom: 10px; border: 1px solid #222; }
+        .chat-msg { margin-bottom: 5px; border-left: 2px solid var(--main); padding-left: 5px; }
+        .chat-msg b { color: var(--main); }
+
+        /* Статистика */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .stat-card { background: #1a1a1a; padding: 10px; border-radius: 10px; border: 1px solid #333; }
+        .stat-val { font-size: 20px; font-weight: bold; color: var(--main); }
+
+        /* Уведомления */
+        #toast { 
+            position: fixed; bottom: 20px; right: 20px; background: var(--main); 
+            color: white; padding: 15px 25px; border-radius: 10px; 
+            font-weight: bold; display: none; animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+        .item-list { max-height: 200px; overflow-y: auto; margin-bottom: 15px; }
+        .item { background: #1a1a1a; padding: 12px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; border: 1px solid #333; }
+        .active-item { border-color: var(--main); background: #251010; }
+        .flag { width: 30px; height: 20px; margin-right: 10px; border-radius: 3px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="menu-btn" id="m-btn" onclick="toggleMenu()"><div></div><div></div><div></div></div>
-    
-    <div class="menu-overlay" id="m-overlay">
-        <div class="menu-link" onclick="showAdmin()" style="color: #ffcc00;">⚙ АДМИН-ПАНЕЛЬ</div>
-        <div class="menu-link" onclick="showPayment()">ОПЛАТИТЬ ПОДПИСКУ</div>
-        <div class="menu-link" onclick="alert('Support: @virtux_admin')">ПОДДЕРЖКА</div>
-        <div class="menu-link" onclick="toggleMenu()" style="color: #555; font-size: 14px; margin-top: 20px;">ЗАКРЫТЬ</div>
+<div id="toast">Message here!</div>
+
+<div class="container" id="app">
+    <div class="nav-btn" onclick="toggleMenu()">☰</div>
+
+    <!-- Регистрация -->
+    <div id="scr-reg" class="screen active-screen">
+        <h1>VIRTU<span class="accent">X</span></h1>
+        <p style="font-size: 12px; color: #666;">CREATE PRIVATE ACCOUNT</p>
+        <input type="text" id="reg-user" placeholder="Username (6-35 chars)">
+        <input type="password" id="reg-pass" placeholder="Password (6-35 chars)">
+        <button class="btn" onclick="register()">SIGN UP</button>
+        <p style="font-size: 11px; margin-top: 15px; cursor: pointer;" onclick="nav('scr-login')">Already have an account? Login</p>
     </div>
 
-    <h1><span class="red">virtu</span>x vpn</h1>
-
-    <div id="login-form">
-        <input type="text" id="user" placeholder="LOGIN">
-        <input type="password" id="pass" placeholder="PASSWORD">
-        <button class="btn" onclick="login()">ENTER PANEL</button>
+    <!-- Логин -->
+    <div id="scr-login" class="screen">
+        <h1>LOG<span class="accent">IN</span></h1>
+        <input type="text" id="login-user" placeholder="Username">
+        <input type="password" id="login-pass" placeholder="Password">
+        <button class="btn" onclick="login()">ENTER SYSTEM</button>
     </div>
 
-    <div id="device-panel">
-        <p style="color: #666; font-size: 12px; margin-bottom: 20px;">SELECT YOUR DEVICE</p>
-        <div class="list-container" id="device-list"></div>
-        <button class="btn" onclick="goToServers()">NEXT</button>
-    </div>
-
-    <div id="server-panel">
-        <div class="list-container" id="main-server-list"></div>
-        <div id="loader">
-            <div class="progress-bg"><div class="progress-bar" id="p-bar"></div></div>
-            <p style="font-size: 10px; color: var(--red); margin-top: 10px; letter-spacing: 2px;">CONNECTION IN PROGRESS...</p>
+    <!-- Выбор устройства -->
+    <div id="scr-dev" class="screen">
+        <h1>DEVI<span class="accent">CE</span></h1>
+        <div class="item-list" id="dev-list">
+            <div class="item" onclick="sel(this, 'dev')">💻 WINDOWS</div>
+            <div class="item" onclick="sel(this, 'dev')">📱 ANDROID</div>
+            <div class="item" onclick="sel(this, 'dev')">🍎 IOS / MAC</div>
         </div>
-        <div id="success-mark">✔</div>
-        <button id="conn-btn" class="btn" onclick="startConnect()">CONNECT</button>
+        <button class="btn" onclick="nav('scr-vpn')">CONTINUE</button>
     </div>
 
-    <div id="payment-panel">
-        <div class="grid-item" onclick="alert('SBP...')"><img src="https://upload.wikimedia.org" width="35" style="background:white; padding:2px; border-radius:4px;"> СБП</div>
-        <div class="grid-item" onclick="alert('USDT...')"><img src="https://cdn-icons-png.flaticon.com" width="30"> CRYPTO</div>
-        <button class="btn" style="background:none; border:1px solid #333; margin-top:15px; color: #666;" onclick="backToServers()">BACK</button>
+    <!-- Главная VPN -->
+    <div id="scr-vpn" class="screen">
+        <h1>CONNEC<span class="accent">T</span></h1>
+        <div class="item-list" id="srv-list">
+            <div class="item" onclick="sel(this, 'srv')"><img src="https://flagcdn.com" class="flag"> GERMANY <span style="margin-left:auto; color:var(--main)">12ms</span></div>
+            <div class="item" onclick="sel(this, 'srv')"><img src="https://flagcdn.com" class="flag"> USA <span style="margin-left:auto; color:var(--main)">95ms</span></div>
+        </div>
+        
+        <div id="loader" style="display:none; margin: 15px 0;">
+            <div class="progress-bg"><div id="p-bar" style="height:5px; background:var(--main); width:0%"></div></div>
+        </div>
+        
+        <div id="success" style="display:none; font-size:40px; color:#00ff00; margin:10px;">✔</div>
+        <button id="c-btn" class="btn" onclick="connect()">START VPN</button>
+
+        <div class="chat-box" id="chat"></div>
+        <div style="display:flex; gap:5px;">
+            <input type="text" id="chat-in" placeholder="Type to chat..." style="margin:0; font-size:12px;">
+            <button class="btn" style="width:60px; padding:0" onclick="sendChat()">></button>
+        </div>
     </div>
 
-    <div id="admin-panel">
+    <!-- Админка -->
+    <div id="scr-adm" class="screen">
+        <h1>STA<span class="accent">TS</span></h1>
+        <div class="stats-grid">
+            <div class="stat-card">USERS<br><span class="stat-val" id="st-u">1,240</span></div>
+            <div class="stat-card">LOAD<br><span class="stat-val" id="st-l">14%</span></div>
+        </div>
         <div class="admin-box">
-            <label style="font-size: 10px; color: var(--red);">ADD NEW (SERVER/DEVICE)</label>
-            <select id="add-type" style="width:100%; background:#222; color:white; border:1px solid #333; padding:10px; margin:10px 0; border-radius:8px;">
-                <option value="server">SERVER</option>
-                <option value="device">DEVICE</option>
-            </select>
-            <input type="text" id="new-name" placeholder="Name">
-            <input type="text" id="new-photo" placeholder="Photo URL">
-            <button class="btn" style="height:40px; font-size:12px;" onclick="addItem()">SAVE ITEM</button>
+            <input type="text" id="adm-n" placeholder="Server Name">
+            <input type="text" id="adm-p" placeholder="Photo URL">
+            <button class="btn" onclick="addSrv()">ADD SERVER</button>
         </div>
-        <div id="admin-list" class="list-container" style="background:#000; padding:10px; border-radius:10px; max-height:150px;"></div>
-        <button class="btn" style="background:none; margin-top:10px; color: #666;" onclick="backToServers()">BACK</button>
+        <button class="btn" style="background:#333; margin-top:10px;" onclick="nav('scr-vpn')">BACK</button>
+    </div>
+
+    <!-- Оплата -->
+    <div id="scr-pay" class="screen">
+        <h1>PAY<span class="accent">MENT</span></h1>
+        <div class="item" onclick="toast('Redirecting to SBP...')">💸 СБП / КАРТЫ</div>
+        <div class="item" onclick="toast('BTC: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa')">₿ CRYPTO</div>
+        <button class="btn" style="background:#333; margin-top:10px;" onclick="nav('scr-vpn')">BACK</button>
+    </div>
+
+    <!-- Меню Оверлей -->
+    <div id="menu" class="menu-overlay">
+        <div class="menu-link" onclick="toggleTheme()">🌓 CHANGE THEME</div>
+        <div class="menu-link" onclick="nav('scr-pay'); toggleMenu()">💳 UPGRADE PLAN</div>
+        <div class="menu-link" onclick="nav('scr-adm'); toggleMenu()">⚙ ADMIN PANEL</div>
+        <div class="menu-link" onclick="location.reload()">LOGOUT</div>
+        <div class="menu-link" onclick="toggleMenu()" style="color:#555">CLOSE</div>
     </div>
 </div>
 
 <script>
-    let servers = JSON.parse(localStorage.getItem('vx_srv')) || [
-        {name: 'GERMANY', photo: 'https://flagcdn.com', id: 1},
-        {name: 'RUSSIA', photo: 'https://flagcdn.com', id: 2}
-    ];
-    let devices = JSON.parse(localStorage.getItem('vx_dev')) || [
-        {name: 'WINDOWS', photo: 'https://cdn-icons-png.flaticon.com', id: 10},
-        {name: 'ANDROID', photo: 'https://cdn-icons-png.flaticon.com', id: 11},
-        {name: 'IOS', photo: 'https://cdn-icons-png.flaticon.com', id: 12}
-    ];
+    let currentUser = null;
+    let chatMsgs = JSON.parse(localStorage.getItem('vx_chat') || '[]');
 
-    window.onload = () => { renderAll(); setInterval(updatePings, 2000); };
+    function nav(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById(id).classList.add('active-screen');
+    }
+
+    function toast(txt) {
+        const t = document.getElementById('toast');
+        t.innerText = txt; t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    function register() {
+        const u = document.getElementById('reg-user').value;
+        const p = document.getElementById('reg-pass').value;
+        const regex = /^[a-zA-Z0-9]+$/;
+
+        if (u.length < 6 || u.length > 35 || !regex.test(u)) {
+            return toast("User: 6-35 symbols, English only!");
+        }
+        localStorage.setItem('user_' + u, p);
+        toast("Registered! Now Login.");
+        nav('scr-login');
+    }
 
     function login() {
-        if(document.getElementById('user').value.trim() === 'loqin' && document.getElementById('pass').value.trim() === 'house2233') {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('device-panel').style.display = 'block';
-            document.getElementById('m-btn').style.display = 'block';
-        }
+        const u = document.getElementById('login-user').value;
+        const p = document.getElementById('login-pass').value;
+        if (localStorage.getItem('user_' + u) === p || (u === 'loqin' && p === 'house2233')) {
+            currentUser = u;
+            toast("Welcome, " + u);
+            nav('scr-dev');
+        } else { toast("Invalid credentials!"); }
     }
 
-    function renderAll() {
-        const sList = document.getElementById('main-server-list');
-        const dList = document.getElementById('device-list');
-        const aList = document.getElementById('admin-list');
-        sList.innerHTML = ''; dList.innerHTML = ''; aList.innerHTML = '';
-
-        devices.forEach(d => {
-            const item = document.createElement('div');
-            item.className = 'grid-item';
-            item.onclick = function() { selectItem(this, 'device'); };
-            item.innerHTML = `<img src="${d.photo}" class="icon-img"> <span>${d.name}</span>`;
-            dList.appendChild(item);
-            aList.innerHTML += `<div style="display:flex; justify:space-between; padding:5px; border-bottom:1px solid #222; font-size:10px;">[DEV] ${d.name} <button class="del-btn" onclick="deleteItem(${d.id}, 'device')">DEL</button></div>`;
-        });
-
-        servers.forEach(s => {
-            const item = document.createElement('div');
-            item.className = 'grid-item';
-            item.onclick = function() { selectItem(this, 'server'); };
-            item.innerHTML = `<img src="${s.photo}" class="icon-img" style="height:25px"> <span>${s.name}</span> <span class="ping"><span class="p-val">${Math.floor(Math.random()*30+5)}</span>ms</span>`;
-            sList.appendChild(item);
-            aList.innerHTML += `<div style="display:flex; justify:space-between; padding:5px; border-bottom:1px solid #222; font-size:10px;">[SRV] ${s.name} <button class="del-btn" onclick="deleteItem(${s.id}, 'server')">DEL</button></div>`;
-        });
-        localStorage.setItem('vx_srv', JSON.stringify(servers));
-        localStorage.setItem('vx_dev', JSON.stringify(devices));
+    function sel(el, type) {
+        const list = type === 'dev' ? '#dev-list .item' : '#srv-list .item';
+        document.querySelectorAll(list).forEach(i => i.classList.remove('active-item'));
+        el.classList.add('active-item');
     }
 
-    function addItem() {
-        const type = document.getElementById('add-type').value;
-        const name = document.getElementById('new-name').value.toUpperCase();
-        const photo = document.getElementById('new-photo').value;
-        if(!name || !photo) return;
-        if(type === 'server') servers.push({name, photo, id: Date.now()});
-        else devices.push({name, photo, id: Date.now()});
-        renderAll();
-    }
-
-    function deleteItem(id, type) {
-        if(type === 'server') servers = servers.filter(s => s.id !== id);
-        else devices = devices.filter(d => d.id !== id);
-        renderAll();
-    }
-
-    function selectItem(el, type) {
-        const cls = type === 'device' ? '#device-list .grid-item' : '#main-server-list .grid-item';
-        document.querySelectorAll(cls).forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
-    }
-
-    function goToServers() {
-        if(!document.querySelector('#device-list .active')) return alert('Select Device');
-        document.getElementById('device-panel').style.display = 'none';
-        document.getElementById('server-panel').style.display = 'block';
-    }
-
-    function startConnect() {
-        if(!document.querySelector('#main-server-list .active')) return alert('Select Server');
-        document.getElementById('conn-btn').style.display = 'none';
-        document.getElementById('main-server-list').style.opacity = '0.1';
+    function connect() {
+        if(!document.querySelector('#srv-list .active-item')) return toast("Select Server!");
+        document.getElementById('c-btn').style.display = 'none';
         document.getElementById('loader').style.display = 'block';
         let w = 0;
         let int = setInterval(() => {
-            w++; document.getElementById('p-bar').style.width = w + '%';
-            if(w >= 100) { clearInterval(int); document.getElementById('loader').style.display = 'none'; document.getElementById('success-mark').style.display = 'block'; }
-        }, 65);
+            w += 2; document.getElementById('p-bar').style.width = w + '%';
+            if(w >= 100) { 
+                clearInterval(int); 
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('success').style.display = 'block';
+                toast("VPN STABLISHED");
+            }
+        }, 100);
     }
 
-    function updatePings() {
-        document.querySelectorAll('.p-val').forEach(pv => { pv.innerText = Math.max(2, parseInt(pv.innerText) + (Math.floor(Math.random() * 3) - 1)); });
+    function toggleMenu() {
+        const m = document.getElementById('menu');
+        m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
     }
 
-    function toggleMenu() { const o = document.getElementById('m-overlay'); o.style.display = (o.style.display === 'flex') ? 'none' : 'flex'; }
-    function showAdmin() { toggleMenu(); hideAll(); document.getElementById('admin-panel').style.display = 'block'; }
-    function showPayment() { toggleMenu(); hideAll(); document.getElementById('payment-panel').style.display = 'block'; }
-    function backToServers() { hideAll(); document.getElementById('server-panel').style.display = 'block'; }
-    function hideAll() {
-        document.getElementById('login-form').style.display = 'none';
-        document.getElementById('device-panel').style.display = 'none';
-        document.getElementById('server-panel').style.display = 'none';
-        document.getElementById('payment-panel').style.display = 'none';
-        document.getElementById('admin-panel').style.display = 'none';
-        document.getElementById('success-mark').style.display = 'none';
-        document.getElementById('conn-btn').style.display = 'block';
-        document.getElementById('main-server-list').style.opacity = '1';
+    function toggleTheme() {
+        document.body.classList.toggle('blue-theme');
+        toast("Theme Changed!");
     }
+
+    function sendChat() {
+        const inp = document.getElementById('chat-in');
+        if(!inp.value) return;
+        const msg = { u: currentUser || 'Guest', t: inp.value };
+        chatMsgs.push(msg);
+        if(chatMsgs.length > 20) chatMsgs.shift();
+        localStorage.setItem('vx_chat', JSON.stringify(chatMsgs));
+        inp.value = '';
+        renderChat();
+    }
+
+    function renderChat() {
+        const c = document.getElementById('chat');
+        c.innerHTML = chatMsgs.map(m => `<div class="chat-msg"><b>${m.u}:</b> ${m.t}</div>`).join('');
+        c.scrollTop = c.scrollHeight;
+    }
+
+    function addSrv() {
+        const n = document.getElementById('adm-n').value;
+        const p = document.getElementById('adm-p').value;
+        if(!n) return;
+        const list = document.getElementById('srv-list');
+        list.innerHTML += `<div class="item" onclick="sel(this, 'srv')"><img src="${p}" class="flag"> ${n.toUpperCase()} <span style="margin-left:auto; color:var(--main)">5ms</span></div>`;
+        toast("Server Added!");
+        nav('scr-vpn');
+    }
+
+    setInterval(() => {
+        document.getElementById('st-u').innerText = (Math.floor(Math.random() * 500) + 1000).toLocaleString();
+        document.getElementById('st-l').innerText = Math.floor(Math.random() * 30) + 5 + "%";
+    }, 3000);
+
+    renderChat();
 </script>
 </body>
 </html>
