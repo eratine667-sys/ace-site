@@ -6,35 +6,28 @@
     <style>
         :root { --red: #ff0000; --bg: #0c0c0c; --card: #1a1a1a; }
         body { background-color: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
-        .container { background-color: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 0 35px rgba(255, 0, 0, 0.5); width: 400px; text-align: center; border: 2px solid var(--red); position: relative; }
+        .container { background-color: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 0 35px rgba(255, 0, 0, 0.5); width: 420px; text-align: center; border: 2px solid var(--red); position: relative; }
         .menu-btn { position: absolute; top: 25px; right: 25px; cursor: pointer; z-index: 100; display: none; }
-        .menu-btn div { width: 22px; height: 2px; background: white; margin: 5px; transition: 0.3s; }
+        .menu-btn div { width: 22px; height: 2px; background: white; margin: 5px; }
         .menu-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 90; display: none; flex-direction: column; justify-content: center; align-items: center; border-radius: 18px; }
-        .menu-link { color: white; text-decoration: none; font-size: 18px; margin: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .menu-link:hover { color: var(--red); transform: scale(1.1); }
-        h1 { font-size: 42px; margin-bottom: 30px; letter-spacing: 2px; font-weight: 900; text-transform: uppercase; pointer-events: none; }
+        .menu-link { color: white; text-decoration: none; font-size: 18px; margin: 12px; font-weight: bold; cursor: pointer; }
+        h1 { font-size: 42px; margin-bottom: 30px; letter-spacing: 2px; font-weight: 900; text-transform: uppercase; }
         .red { color: var(--red); }
-        input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #333; background: #222; color: white; margin-bottom: 12px; outline: none; box-sizing: border-box; transition: 0.3s; }
-        input:focus { border-color: var(--red); box-shadow: 0 0 10px rgba(255,0,0,0.2); }
+        input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #333; background: #222; color: white; margin-bottom: 12px; outline: none; box-sizing: border-box; }
         .btn { width: 100%; padding: 16px; border: none; border-radius: 10px; font-weight: 900; cursor: pointer; background: var(--red); color: white; transition: 0.3s; text-transform: uppercase; }
-        .btn:hover { background: #cc0000; transform: translateY(-2px); }
-        #server-panel, #payment-panel, #admin-panel { display: none; }
-        .server-list { max-height: 260px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px; }
-        .server-item { background: #222; padding: 12px; border-radius: 12px; border: 1px solid #333; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
-        .server-item:hover { border-color: var(--red); }
-        .active { border-color: var(--red); background: #2a0a0a; box-shadow: 0 0 15px rgba(255,0,0,0.2); }
-        .flag-img { width: 40px; height: 26px; border-radius: 4px; object-fit: cover; background: #333; }
-        .ping { margin-left: auto; font-size: 11px; color: var(--red); font-family: monospace; font-weight: bold; }
+        #device-panel, #server-panel, #payment-panel, #admin-panel { display: none; }
+        .list-container { max-height: 260px; overflow-y: auto; margin-bottom: 15px; }
+        .grid-item { background: #222; padding: 15px; border-radius: 12px; border: 1px solid #333; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
+        .grid-item:hover { border-color: var(--red); }
+        .active { border-color: var(--red); background: #2a0a0a; }
+        .icon-img { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; }
+        .ping { margin-left: auto; font-size: 11px; color: var(--red); font-family: monospace; }
         #loader { display: none; margin-top: 15px; }
         .progress-bg { width: 100%; height: 6px; background: #333; border-radius: 10px; overflow: hidden; }
         .progress-bar { width: 0%; height: 100%; background: var(--red); box-shadow: 0 0 10px var(--red); }
-        #success-mark { display: none; font-size: 60px; color: #00ff00; margin: 15px 0; animation: bounce 0.5s ease; }
-        @keyframes bounce { 0% {transform: scale(0.3);} 50% {transform: scale(1.1);} 100% {transform: scale(1);} }
-        .admin-box { background: #111; padding: 15px; border-radius: 12px; border: 1px dashed #444; margin-bottom: 15px; }
-        .del-btn { background: #333; color: #ff4444; border: 1px solid #444; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 10px; transition: 0.2s; }
-        .del-btn:hover { background: var(--red); color: white; border-color: var(--red); }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
+        #success-mark { display: none; font-size: 60px; color: #00ff00; margin: 15px 0; }
+        .admin-box { background: #111; padding: 15px; border-radius: 12px; border: 1px dashed #444; margin-bottom: 15px; text-align: left; }
+        .del-btn { background: #333; color: #ff4444; border: 1px solid #444; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; }
     </style>
 </head>
 <body>
@@ -46,66 +39,64 @@
         <div class="menu-link" onclick="showAdmin()" style="color: #ffcc00;">⚙ АДМИН-ПАНЕЛЬ</div>
         <div class="menu-link" onclick="showPayment()">ОПЛАТИТЬ ПОДПИСКУ</div>
         <div class="menu-link" onclick="alert('Support: @virtux_admin')">ПОДДЕРЖКА</div>
-        <div class="menu-link" onclick="alert('VirtuX v1.0 - Private Network')">О НАС</div>
         <div class="menu-link" onclick="toggleMenu()" style="color: #555; font-size: 14px; margin-top: 20px;">ЗАКРЫТЬ</div>
     </div>
 
     <h1><span class="red">virtu</span>x vpn</h1>
 
-    <!-- ВХОД -->
     <div id="login-form">
         <input type="text" id="user" placeholder="LOGIN">
         <input type="password" id="pass" placeholder="PASSWORD">
         <button class="btn" onclick="login()">ENTER PANEL</button>
     </div>
 
-    <!-- ГЛАВНЫЙ ИНТЕРФЕЙС -->
+    <div id="device-panel">
+        <p style="color: #666; font-size: 12px; margin-bottom: 20px;">SELECT YOUR DEVICE</p>
+        <div class="list-container" id="device-list"></div>
+        <button class="btn" onclick="goToServers()">NEXT</button>
+    </div>
+
     <div id="server-panel">
-        <div class="server-list" id="main-server-list"></div>
+        <div class="list-container" id="main-server-list"></div>
         <div id="loader">
             <div class="progress-bg"><div class="progress-bar" id="p-bar"></div></div>
-            <p style="font-size: 10px; color: var(--red); margin-top: 10px; letter-spacing: 2px;">SECURE CONNECTION...</p>
+            <p style="font-size: 10px; color: var(--red); margin-top: 10px; letter-spacing: 2px;">CONNECTION IN PROGRESS...</p>
         </div>
         <div id="success-mark">✔</div>
         <button id="conn-btn" class="btn" onclick="startConnect()">CONNECT</button>
     </div>
 
-    <!-- ОПЛАТА -->
     <div id="payment-panel">
-        <h3 style="color: var(--red); margin-bottom: 20px; font-size: 14px; letter-spacing: 1px;">МЕТОДЫ ОПЛАТЫ</h3>
-        <div class="server-item" onclick="alert('Redirecting to SBP...')">
-            <img src="https://upload.wikimedia.org" width="35" style="background:white; padding:3px; border-radius:4px;"> 
-            <span>СБП (БЫСТРЫЙ ПЛАТЕЖ)</span>
-        </div>
-        <div class="server-item" onclick="alert('USDT Wallet: Txxxxxx...')">
-            <img src="https://cdn-icons-png.flaticon.com" width="30"> 
-            <span>CRYPTO (USDT / BTC)</span>
-        </div>
-        <div class="server-item" onclick="alert('Redirecting to Stripe/Visa...')">
-            <img src="https://cdn-icons-png.flaticon.com" width="30"> 
-            <span>BANK CARD (MIR/VISA)</span>
-        </div>
-        <button class="btn" style="background:none; border:1px solid #333; margin-top:15px; color: #666;" onclick="backToServers()">НАЗАД</button>
+        <div class="grid-item" onclick="alert('SBP...')"><img src="https://upload.wikimedia.org" width="35" style="background:white; padding:2px; border-radius:4px;"> СБП</div>
+        <div class="grid-item" onclick="alert('USDT...')"><img src="https://cdn-icons-png.flaticon.com" width="30"> CRYPTO</div>
+        <button class="btn" style="background:none; border:1px solid #333; margin-top:15px; color: #666;" onclick="backToServers()">BACK</button>
     </div>
 
-    <!-- АДМИНКА -->
     <div id="admin-panel">
         <div class="admin-box">
-            <input type="text" id="new-name" placeholder="Название сервера">
-            <input type="text" id="new-photo" placeholder="URL фото флага">
-            <button class="btn" style="height: 45px; font-size: 12px; background: #222; border: 1px solid var(--red);" onclick="addServer()">ДОБАВИТЬ СЕРВЕР</button>
+            <label style="font-size: 10px; color: var(--red);">ADD NEW (SERVER/DEVICE)</label>
+            <select id="add-type" style="width:100%; background:#222; color:white; border:1px solid #333; padding:10px; margin:10px 0; border-radius:8px;">
+                <option value="server">SERVER</option>
+                <option value="device">DEVICE</option>
+            </select>
+            <input type="text" id="new-name" placeholder="Name">
+            <input type="text" id="new-photo" placeholder="Photo URL">
+            <button class="btn" style="height:40px; font-size:12px;" onclick="addItem()">SAVE ITEM</button>
         </div>
-        <div id="admin-list" class="server-list" style="max-height: 140px; border: 1px solid #222; border-radius: 10px; padding: 10px; background: #000;"></div>
-        <button class="btn" style="background:none; margin-top:15px; color: #666;" onclick="backToServers()">НАЗАД</button>
+        <div id="admin-list" class="list-container" style="background:#000; padding:10px; border-radius:10px; max-height:150px;"></div>
+        <button class="btn" style="background:none; margin-top:10px; color: #666;" onclick="backToServers()">BACK</button>
     </div>
 </div>
 
 <script>
-    const STORAGE_KEY = 'virtux_v3_data';
-    let servers = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
-        {name: 'GERMANY, FRANKFURT', photo: 'https://flagcdn.com', id: 1},
-        {name: 'RUSSIA, MOSCOW', photo: 'https://flagcdn.com', id: 2},
-        {name: 'USA, NEW YORK', photo: 'https://flagcdn.com', id: 3}
+    let servers = JSON.parse(localStorage.getItem('vx_srv')) || [
+        {name: 'GERMANY', photo: 'https://flagcdn.com', id: 1},
+        {name: 'RUSSIA', photo: 'https://flagcdn.com', id: 2}
+    ];
+    let devices = JSON.parse(localStorage.getItem('vx_dev')) || [
+        {name: 'WINDOWS', photo: 'https://cdn-icons-png.flaticon.com', id: 10},
+        {name: 'ANDROID', photo: 'https://cdn-icons-png.flaticon.com', id: 11},
+        {name: 'IOS', photo: 'https://cdn-icons-png.flaticon.com', id: 12}
     ];
 
     window.onload = () => { renderAll(); setInterval(updatePings, 2000); };
@@ -113,66 +104,80 @@
     function login() {
         if(document.getElementById('user').value.trim() === 'loqin' && document.getElementById('pass').value.trim() === 'house2233') {
             document.getElementById('login-form').style.display = 'none';
-            document.getElementById('server-panel').style.display = 'block';
+            document.getElementById('device-panel').style.display = 'block';
             document.getElementById('m-btn').style.display = 'block';
-        } else { alert('ACCESS DENIED'); }
+        }
     }
 
     function renderAll() {
-        const mainList = document.getElementById('main-server-list');
-        const adminList = document.getElementById('admin-list');
-        mainList.innerHTML = ''; adminList.innerHTML = '';
+        const sList = document.getElementById('main-server-list');
+        const dList = document.getElementById('device-list');
+        const aList = document.getElementById('admin-list');
+        sList.innerHTML = ''; dList.innerHTML = ''; aList.innerHTML = '';
+
+        devices.forEach(d => {
+            const item = document.createElement('div');
+            item.className = 'grid-item';
+            item.onclick = function() { selectItem(this, 'device'); };
+            item.innerHTML = `<img src="${d.photo}" class="icon-img"> <span>${d.name}</span>`;
+            dList.appendChild(item);
+            aList.innerHTML += `<div style="display:flex; justify:space-between; padding:5px; border-bottom:1px solid #222; font-size:10px;">[DEV] ${d.name} <button class="del-btn" onclick="deleteItem(${d.id}, 'device')">DEL</button></div>`;
+        });
+
         servers.forEach(s => {
             const item = document.createElement('div');
-            item.className = 'server-item';
-            item.onclick = function() { select(this); };
-            item.innerHTML = `<img src="${s.photo}" class="flag-img"> <span>${s.name}</span> <span class="ping"><span class="p-val">${Math.floor(Math.random()*40+5)}</span>ms</span>`;
-            mainList.appendChild(item);
-
-            const admItem = document.createElement('div');
-            admItem.style = "display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #111; font-size:11px;";
-            admItem.innerHTML = `<span style="color:#888">${s.name}</span> <button class="del-btn" onclick="deleteServer(${s.id})">DEL</button>`;
-            adminList.appendChild(admItem);
+            item.className = 'grid-item';
+            item.onclick = function() { selectItem(this, 'server'); };
+            item.innerHTML = `<img src="${s.photo}" class="icon-img" style="height:25px"> <span>${s.name}</span> <span class="ping"><span class="p-val">${Math.floor(Math.random()*30+5)}</span>ms</span>`;
+            sList.appendChild(item);
+            aList.innerHTML += `<div style="display:flex; justify:space-between; padding:5px; border-bottom:1px solid #222; font-size:10px;">[SRV] ${s.name} <button class="del-btn" onclick="deleteItem(${s.id}, 'server')">DEL</button></div>`;
         });
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(servers));
+        localStorage.setItem('vx_srv', JSON.stringify(servers));
+        localStorage.setItem('vx_dev', JSON.stringify(devices));
     }
 
-    function addServer() {
-        const n = document.getElementById('new-name').value.toUpperCase();
-        const p = document.getElementById('new-photo').value;
-        if(!n || !p) return alert('Fill fields!');
-        servers.push({name: n, photo: p, id: Date.now()});
-        renderAll();
-        document.getElementById('new-name').value = ''; document.getElementById('new-photo').value = '';
-    }
-
-    function deleteServer(id) {
-        servers = servers.filter(s => s.id !== id);
+    function addItem() {
+        const type = document.getElementById('add-type').value;
+        const name = document.getElementById('new-name').value.toUpperCase();
+        const photo = document.getElementById('new-photo').value;
+        if(!name || !photo) return;
+        if(type === 'server') servers.push({name, photo, id: Date.now()});
+        else devices.push({name, photo, id: Date.now()});
         renderAll();
     }
 
-    function select(el) {
-        document.querySelectorAll('.server-item').forEach(s => s.classList.remove('active'));
+    function deleteItem(id, type) {
+        if(type === 'server') servers = servers.filter(s => s.id !== id);
+        else devices = devices.filter(d => d.id !== id);
+        renderAll();
+    }
+
+    function selectItem(el, type) {
+        const cls = type === 'device' ? '#device-list .grid-item' : '#main-server-list .grid-item';
+        document.querySelectorAll(cls).forEach(i => i.classList.remove('active'));
         el.classList.add('active');
     }
 
-    function updatePings() {
-        document.querySelectorAll('.p-val').forEach(pv => {
-            pv.innerText = Math.max(2, parseInt(pv.innerText) + (Math.floor(Math.random() * 3) - 1));
-        });
+    function goToServers() {
+        if(!document.querySelector('#device-list .active')) return alert('Select Device');
+        document.getElementById('device-panel').style.display = 'none';
+        document.getElementById('server-panel').style.display = 'block';
     }
 
     function startConnect() {
-        if(!document.querySelector('.active')) return alert('SELECT SERVER');
+        if(!document.querySelector('#main-server-list .active')) return alert('Select Server');
         document.getElementById('conn-btn').style.display = 'none';
         document.getElementById('main-server-list').style.opacity = '0.1';
         document.getElementById('loader').style.display = 'block';
         let w = 0;
         let int = setInterval(() => {
-            w++;
-            document.getElementById('p-bar').style.width = w + '%';
+            w++; document.getElementById('p-bar').style.width = w + '%';
             if(w >= 100) { clearInterval(int); document.getElementById('loader').style.display = 'none'; document.getElementById('success-mark').style.display = 'block'; }
-        }, 60); 
+        }, 65);
+    }
+
+    function updatePings() {
+        document.querySelectorAll('.p-val').forEach(pv => { pv.innerText = Math.max(2, parseInt(pv.innerText) + (Math.floor(Math.random() * 3) - 1)); });
     }
 
     function toggleMenu() { const o = document.getElementById('m-overlay'); o.style.display = (o.style.display === 'flex') ? 'none' : 'flex'; }
@@ -180,6 +185,8 @@
     function showPayment() { toggleMenu(); hideAll(); document.getElementById('payment-panel').style.display = 'block'; }
     function backToServers() { hideAll(); document.getElementById('server-panel').style.display = 'block'; }
     function hideAll() {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('device-panel').style.display = 'none';
         document.getElementById('server-panel').style.display = 'none';
         document.getElementById('payment-panel').style.display = 'none';
         document.getElementById('admin-panel').style.display = 'none';
