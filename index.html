@@ -21,6 +21,7 @@
         .server-item, .pay-item { background: #252525; padding: 12px; border-radius: 12px; border: 1px solid #333; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
         .active { border-color: var(--red); background: #350505; }
         .flag-img { width: 40px; height: 25px; border-radius: 4px; object-fit: cover; background: #333; }
+        .ping { margin-left: auto; font-size: 11px; color: var(--red); font-family: monospace; }
         #loader { display: none; margin-top: 15px; }
         .progress-bg { width: 100%; height: 8px; background: #222; border-radius: 5px; overflow: hidden; }
         .progress-bar { width: 0%; height: 100%; background: var(--red); }
@@ -45,8 +46,8 @@
     </div>
     <div id="server-panel">
         <div class="server-list" id="main-server-list">
-            <div class="server-item" onclick="select(this)"><img src="https://flagcdn.com" class="flag-img"> GERMANY</div>
-            <div class="server-item" onclick="select(this)"><img src="https://flagcdn.com" class="flag-img"> RUSSIA</div>
+            <div class="server-item" onclick="select(this)"><img src="https://flagcdn.com" class="flag-img"> GERMANY <span class="ping"><span class="p-val">15</span>ms</span></div>
+            <div class="server-item" onclick="select(this)"><img src="https://flagcdn.com" class="flag-img"> RUSSIA <span class="ping"><span class="p-val">5</span>ms</span></div>
         </div>
         <div id="loader">
             <div class="progress-bg"><div class="progress-bar" id="p-bar"></div></div>
@@ -57,9 +58,9 @@
     </div>
     <div id="payment-panel">
         <h3 style="color: var(--red);">ВЫБОР ОПЛАТЫ</h3>
-        <div class="pay-item" onclick="alert('Перенаправление на СБП...')"><img src="https://upload.wikimedia.org" width="35" style="background:white; padding:2px; border-radius:4px;"> СБП (Россия)</div>
-        <div class="pay-item" onclick="alert('Оплата USDT...')"><img src="https://cdn-icons-png.flaticon.com" width="30"> CRYPTO (USDT)</div>
-        <div class="pay-item" onclick="alert('Оплата Картой...')"><img src="https://cdn-icons-png.flaticon.com" width="30"> КАРТА (МИР/VISA)</div>
+        <div class="pay-item" onclick="alert('Redirecting to SBP...')"><img src="https://upload.wikimedia.org" width="35" style="background:white; padding:2px; border-radius:4px;"> СБП (Россия)</div>
+        <div class="pay-item" onclick="alert('USDT Wallet: Txxxx...')"><img src="https://cdn-icons-png.flaticon.com" width="30"> CRYPTO (USDT)</div>
+        <div class="pay-item" onclick="alert('Enter Card Info...')"><img src="https://cdn-icons-png.flaticon.com" width="30"> КАРТА (МИР/VISA)</div>
         <button class="btn" style="background:none; border:1px solid #333; margin-top:15px" onclick="backToServers()">НАЗАД</button>
     </div>
     <div id="admin-panel">
@@ -73,6 +74,12 @@
     </div>
 </div>
 <script>
+    const STORAGE_KEY = 'virtux_servers';
+    window.onload = function() {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        saved.forEach(s => renderServer(s.name, s.photo));
+        setInterval(updatePings, 2000);
+    };
     function login() {
         const u = document.getElementById('user').value.trim();
         const p = document.getElementById('pass').value.trim();
@@ -80,7 +87,7 @@
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('server-panel').style.display = 'block';
             document.getElementById('m-btn').style.display = 'block';
-        } else { alert('ОШИБКА ДОСТУПА'); }
+        } else { alert('ACCESS DENIED'); }
     }
     function toggleMenu() {
         const ov = document.getElementById('m-overlay');
@@ -90,8 +97,14 @@
         document.querySelectorAll('.server-item').forEach(s => s.classList.remove('active'));
         el.classList.add('active');
     }
+    function updatePings() {
+        document.querySelectorAll('.p-val').forEach(pv => {
+            let n = parseInt(pv.innerText);
+            pv.innerText = Math.max(2, n + (Math.floor(Math.random() * 3) - 1));
+        });
+    }
     function startConnect() {
-        if(!document.querySelector('.active')) return alert('Выберите сервер!');
+        if(!document.querySelector('.active')) return alert('Select server!');
         document.getElementById('conn-btn').style.display = 'none';
         document.getElementById('main-server-list').style.opacity = '0.2';
         document.getElementById('loader').style.display = 'block';
@@ -105,14 +118,20 @@
     function addServer() {
         const name = document.getElementById('new-name').value;
         const photo = document.getElementById('new-photo').value;
-        if(!name || !photo) return alert('Заполни все поля!');
+        if(!name || !photo) return alert('Fill fields!');
+        renderServer(name, photo);
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        saved.push({name, photo});
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+        backToServers();
+    }
+    function renderServer(name, photo) {
         const list = document.getElementById('main-server-list');
         const newItem = document.createElement('div');
         newItem.className = 'server-item';
         newItem.onclick = function() { select(this); };
-        newItem.innerHTML = `<img src="${photo}" class="flag-img"> ${name.toUpperCase()}`;
+        newItem.innerHTML = `<img src="${photo}" class="flag-img"> ${name.toUpperCase()} <span class="ping"><span class="p-val">${Math.floor(Math.random()*100)}</span>ms</span>`;
         list.appendChild(newItem);
-        backToServers();
     }
     function showAdmin() { toggleMenu(); hideAll(); document.getElementById('admin-panel').style.display = 'block'; }
     function showPayment() { toggleMenu(); hideAll(); document.getElementById('payment-panel').style.display = 'block'; }
