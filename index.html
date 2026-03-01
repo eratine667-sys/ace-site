@@ -4,49 +4,121 @@
     <meta charset="UTF-8">
     <title>VirtuX VPN</title>
     <style>
-        body { background-color: #121212; color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background-color: #1e1e1e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 350px; text-align: center; border: 1px solid #333; }
-        h1 { font-size: 32px; margin-bottom: 25px; letter-spacing: 2px; }
+        body { background-color: #0f0f0f; color: white; font-family: 'Segoe UI', Roboto, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        .container { background-color: #1a1a1a; padding: 40px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); width: 400px; text-align: center; border: 1px solid #2a2a2a; position: relative; }
+        h1 { font-size: 38px; margin-bottom: 30px; letter-spacing: 3px; text-transform: uppercase; font-weight: 900; }
         .red-text { color: #ff0000; }
         .white-text { color: #ffffff; }
-        .input-group { margin-bottom: 15px; text-align: left; }
-        label { display: block; font-size: 12px; color: #888; margin-bottom: 5px; margin-left: 5px; }
-        input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #252525; color: white; box-sizing: border-box; outline: none; }
-        input:focus { border-color: #ff0000; }
-        .btn { width: 100%; padding: 15px; margin-top: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-connect { background-color: #ff0000; color: white; }
-        .btn-connect:hover { background-color: #cc0000; }
-        .btn-disconnect { background-color: transparent; color: #888; border: 1px solid #333; margin-top: 15px; }
-        .btn-disconnect:hover { color: white; border-color: white; }
-        .status { margin-top: 20px; font-size: 13px; color: #555; }
-        .status span { color: #ff0000; }
+        
+        #login-form, #server-panel { transition: 0.5s; }
+        #server-panel { display: none; }
+
+        .input-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-size: 11px; color: #666; margin-bottom: 8px; letter-spacing: 1px; padding-left: 5px; }
+        input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #333; background: #111; color: white; box-sizing: border-box; outline: none; font-size: 16px; transition: 0.3s; }
+        input:focus { border-color: #ff0000; box-shadow: 0 0 10px rgba(255,0,0,0.2); }
+
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 10px; font-weight: 900; cursor: pointer; transition: 0.3s; letter-spacing: 1px; font-size: 14px; }
+        .btn-primary { background-color: #ff0000; color: white; margin-top: 10px; }
+        .btn-primary:hover { background-color: #d40000; transform: translateY(-2px); }
+
+        .server-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .server-item { background: #252525; padding: 20px; border-radius: 12px; border: 1px solid #333; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .server-item:hover { border-color: #ff0000; background: #2a1010; }
+        .server-item.active { border-color: #ff0000; background: #350505; box-shadow: 0 0 15px rgba(255,0,0,0.3); }
+        .flag { font-size: 24px; }
+        .server-name { font-size: 12px; font-weight: bold; text-transform: uppercase; }
+
+        .status-bar { margin-top: 25px; padding-top: 20px; border-top: 1px solid #333; font-size: 12px; color: #555; }
+        #status-text { color: #ff0000; font-weight: bold; }
+        .error { color: #ff0000; font-size: 12px; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1><span class="red-text">virtu</span><span class="white-text">x</span> <span class="white-text">vpn</span></h1>
-    
-    <div class="input-group">
-        <label>SERVER ADDRESS</label>
-        <input type="text" placeholder="1.2.3.4">
-    </div>
-    
-    <div class="input-group">
-        <label>USERNAME</label>
-        <input type="text" placeholder="virtux_user">
-    </div>
-    
-    <div class="input-group">
-        <label>PASSWORD</label>
-        <input type="password" placeholder="••••••••">
+
+    <div id="login-form">
+        <div class="input-group">
+            <label>ADMIN LOGIN</label>
+            <input type="text" id="user" placeholder="Enter username">
+        </div>
+        <div class="input-group">
+            <label>PASSWORD</label>
+            <input type="password" id="pass" placeholder="••••••••">
+        </div>
+        <button class="btn btn-primary" onclick="login()">ENTER PANEL</button>
+        <div id="login-error" class="error">INVALID CREDENTIALS</div>
     </div>
 
-    <button class="btn btn-connect">CONNECT</button>
-    <button class="btn btn-disconnect">DISCONNECT</button>
-
-    <div class="status">Status: <span>DISCONNECTED</span></div>
+    <div id="server-panel">
+        <label>SELECT SECURE LOCATION</label>
+        <div class="server-list">
+            <div class="server-item" onclick="selectServer(this)">
+                <span class="flag">🇩🇪</span>
+                <span class="server-name">Германия</span>
+            </div>
+            <div class="server-item" onclick="selectServer(this)">
+                <span class="flag">🇺🇸</span>
+                <span class="server-name">США</span>
+            </div>
+            <div class="server-item" onclick="selectServer(this)">
+                <span class="flag">🇷🇺</span>
+                <span class="server-name">Россия</span>
+            </div>
+            <div class="server-item" onclick="selectServer(this)">
+                <span class="flag">🎮</span>
+                <span class="server-name">Discord VPN</span>
+            </div>
+        </div>
+        <button id="main-btn" class="btn btn-primary" style="margin-top: 25px;" onclick="toggleConnect()">CONNECT</button>
+        <div class="status-bar">SYSTEM STATUS: <span id="status-text">READY</span></div>
+    </div>
 </div>
+
+<script>
+    let isConnected = false;
+
+    function login() {
+        const u = document.getElementById('user').value;
+        const p = document.getElementById('pass').value;
+        const err = document.getElementById('login-error');
+
+        if(u === 'loqin' && p === 'house2233') {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('server-panel').style.display = 'block';
+        } else {
+            err.style.display = 'block';
+            setTimeout(() => err.style.display = 'none', 2000);
+        }
+    }
+
+    function selectServer(el) {
+        document.querySelectorAll('.server-item').forEach(s => s.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    function toggleConnect() {
+        const btn = document.getElementById('main-btn');
+        const status = document.getElementById('status-text');
+        
+        if(!isConnected) {
+            btn.innerText = 'DISCONNECT';
+            btn.style.background = 'transparent';
+            btn.style.border = '1px solid #ff0000';
+            status.innerText = 'PROTECTED';
+            status.style.color = '#00ff00';
+            isConnected = true;
+        } else {
+            btn.innerText = 'CONNECT';
+            btn.style.background = '#ff0000';
+            status.innerText = 'READY';
+            status.style.color = '#ff0000';
+            isConnected = false;
+        }
+    }
+</script>
 
 </body>
 </html>
