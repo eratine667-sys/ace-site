@@ -2,137 +2,180 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>VirtuX VPN | Private Access</title>
+    <title>VirtuX VPN</title>
     <style>
         :root { --red: #ff0000; --bg: #0c0c0c; --card: #1a1a1a; }
         body { background-color: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
         .container { background-color: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 0 35px rgba(255, 0, 0, 0.5); width: 400px; text-align: center; border: 2px solid var(--red); position: relative; }
-        .menu-btn { position: absolute; top: 20px; right: 20px; cursor: pointer; z-index: 100; display: none; }
-        .menu-btn div { width: 25px; height: 3px; background: white; margin: 5px; }
+        .menu-btn { position: absolute; top: 25px; right: 25px; cursor: pointer; z-index: 100; display: none; }
+        .menu-btn div { width: 22px; height: 2px; background: white; margin: 5px; transition: 0.3s; }
         .menu-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 90; display: none; flex-direction: column; justify-content: center; align-items: center; border-radius: 18px; }
-        .menu-link { color: white; text-decoration: none; font-size: 18px; margin: 12px; font-weight: bold; cursor: pointer; }
-        .menu-link:hover { color: var(--red); }
-        h1 { font-size: 42px; margin-bottom: 30px; letter-spacing: 2px; font-weight: 900; text-transform: uppercase; }
+        .menu-link { color: white; text-decoration: none; font-size: 18px; margin: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .menu-link:hover { color: var(--red); transform: scale(1.1); }
+        h1 { font-size: 42px; margin-bottom: 30px; letter-spacing: 2px; font-weight: 900; text-transform: uppercase; pointer-events: none; }
         .red { color: var(--red); }
-        input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #333; background: #222; color: white; margin-bottom: 12px; outline: none; box-sizing: border-box; }
-        .btn { width: 100%; padding: 16px; border: none; border-radius: 10px; font-weight: 900; cursor: pointer; background: var(--red); color: white; transition: 0.3s; }
+        input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #333; background: #222; color: white; margin-bottom: 12px; outline: none; box-sizing: border-box; transition: 0.3s; }
+        input:focus { border-color: var(--red); box-shadow: 0 0 10px rgba(255,0,0,0.2); }
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 10px; font-weight: 900; cursor: pointer; background: var(--red); color: white; transition: 0.3s; text-transform: uppercase; }
+        .btn:hover { background: #cc0000; transform: translateY(-2px); }
         #server-panel, #payment-panel, #admin-panel { display: none; }
-        .server-list { max-height: 250px; overflow-y: auto; margin-bottom: 15px; }
-        .server-item, .pay-item { background: #252525; padding: 12px; border-radius: 12px; border: 1px solid #333; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
-        .active { border-color: var(--red); background: #350505; }
-        .flag-img { width: 40px; height: 25px; border-radius: 4px; object-fit: cover; background: #333; }
-        .ping { margin-left: auto; font-size: 11px; color: var(--red); font-family: monospace; }
+        .server-list { max-height: 260px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px; }
+        .server-item { background: #222; padding: 12px; border-radius: 12px; border: 1px solid #333; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
+        .server-item:hover { border-color: var(--red); }
+        .active { border-color: var(--red); background: #2a0a0a; box-shadow: 0 0 15px rgba(255,0,0,0.2); }
+        .flag-img { width: 40px; height: 26px; border-radius: 4px; object-fit: cover; background: #333; }
+        .ping { margin-left: auto; font-size: 11px; color: var(--red); font-family: monospace; font-weight: bold; }
         #loader { display: none; margin-top: 15px; }
-        .progress-bg { width: 100%; height: 8px; background: #222; border-radius: 5px; overflow: hidden; }
-        .progress-bar { width: 0%; height: 100%; background: var(--red); }
-        #success-mark { display: none; font-size: 50px; color: #00ff00; margin: 15px 0; }
-        .admin-box { background: #111; padding: 15px; border-radius: 10px; border: 1px dashed var(--red); }
+        .progress-bg { width: 100%; height: 6px; background: #333; border-radius: 10px; overflow: hidden; }
+        .progress-bar { width: 0%; height: 100%; background: var(--red); box-shadow: 0 0 10px var(--red); }
+        #success-mark { display: none; font-size: 60px; color: #00ff00; margin: 15px 0; animation: bounce 0.5s ease; }
+        @keyframes bounce { 0% {transform: scale(0.3);} 50% {transform: scale(1.1);} 100% {transform: scale(1);} }
+        .admin-box { background: #111; padding: 15px; border-radius: 12px; border: 1px dashed #444; margin-bottom: 15px; }
+        .del-btn { background: #333; color: #ff4444; border: 1px solid #444; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 10px; transition: 0.2s; }
+        .del-btn:hover { background: var(--red); color: white; border-color: var(--red); }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
     </style>
 </head>
 <body>
+
 <div class="container">
     <div class="menu-btn" id="m-btn" onclick="toggleMenu()"><div></div><div></div><div></div></div>
+    
     <div class="menu-overlay" id="m-overlay">
         <div class="menu-link" onclick="showAdmin()" style="color: #ffcc00;">⚙ АДМИН-ПАНЕЛЬ</div>
         <div class="menu-link" onclick="showPayment()">ОПЛАТИТЬ ПОДПИСКУ</div>
         <div class="menu-link" onclick="alert('Support: @virtux_admin')">ПОДДЕРЖКА</div>
-        <div class="menu-link" onclick="toggleMenu()" style="color: grey; font-size: 14px;">НАЗАД</div>
+        <div class="menu-link" onclick="alert('VirtuX v1.0 - Private Network')">О НАС</div>
+        <div class="menu-link" onclick="toggleMenu()" style="color: #555; font-size: 14px; margin-top: 20px;">ЗАКРЫТЬ</div>
     </div>
+
     <h1><span class="red">virtu</span>x vpn</h1>
+
+    <!-- ВХОД -->
     <div id="login-form">
         <input type="text" id="user" placeholder="LOGIN">
         <input type="password" id="pass" placeholder="PASSWORD">
         <button class="btn" onclick="login()">ENTER PANEL</button>
     </div>
+
+    <!-- ГЛАВНЫЙ ИНТЕРФЕЙС -->
     <div id="server-panel">
-        <div class="server-list" id="main-server-list">
-            <div class="server-item" onclick="select(this)"><img src="https://flagcdn.com" class="flag-img"> GERMANY <span class="ping"><span class="p-val">15</span>ms</span></div>
-            <div class="server-item" onclick="select(this)"><img src="https://flagcdn.com" class="flag-img"> RUSSIA <span class="ping"><span class="p-val">5</span>ms</span></div>
-        </div>
+        <div class="server-list" id="main-server-list"></div>
         <div id="loader">
             <div class="progress-bg"><div class="progress-bar" id="p-bar"></div></div>
-            <p style="font-size: 10px; color: var(--red); margin-top: 10px;">ESTABLISHING ENCRYPTION...</p>
+            <p style="font-size: 10px; color: var(--red); margin-top: 10px; letter-spacing: 2px;">SECURE CONNECTION...</p>
         </div>
         <div id="success-mark">✔</div>
         <button id="conn-btn" class="btn" onclick="startConnect()">CONNECT</button>
     </div>
+
+    <!-- ОПЛАТА -->
     <div id="payment-panel">
-        <h3 style="color: var(--red);">ВЫБОР ОПЛАТЫ</h3>
-        <div class="pay-item" onclick="alert('Redirecting to SBP...')"><img src="https://upload.wikimedia.org" width="35" style="background:white; padding:2px; border-radius:4px;"> СБП (Россия)</div>
-        <div class="pay-item" onclick="alert('USDT Wallet: Txxxx...')"><img src="https://cdn-icons-png.flaticon.com" width="30"> CRYPTO (USDT)</div>
-        <div class="pay-item" onclick="alert('Enter Card Info...')"><img src="https://cdn-icons-png.flaticon.com" width="30"> КАРТА (МИР/VISA)</div>
-        <button class="btn" style="background:none; border:1px solid #333; margin-top:15px" onclick="backToServers()">НАЗАД</button>
+        <h3 style="color: var(--red); margin-bottom: 20px; font-size: 14px; letter-spacing: 1px;">МЕТОДЫ ОПЛАТЫ</h3>
+        <div class="server-item" onclick="alert('Redirecting to SBP...')">
+            <img src="https://upload.wikimedia.org" width="35" style="background:white; padding:3px; border-radius:4px;"> 
+            <span>СБП (БЫСТРЫЙ ПЛАТЕЖ)</span>
+        </div>
+        <div class="server-item" onclick="alert('USDT Wallet: Txxxxxx...')">
+            <img src="https://cdn-icons-png.flaticon.com" width="30"> 
+            <span>CRYPTO (USDT / BTC)</span>
+        </div>
+        <div class="server-item" onclick="alert('Redirecting to Stripe/Visa...')">
+            <img src="https://cdn-icons-png.flaticon.com" width="30"> 
+            <span>BANK CARD (MIR/VISA)</span>
+        </div>
+        <button class="btn" style="background:none; border:1px solid #333; margin-top:15px; color: #666;" onclick="backToServers()">НАЗАД</button>
     </div>
+
+    <!-- АДМИНКА -->
     <div id="admin-panel">
         <div class="admin-box">
-            <h4 style="margin-top:0">ДОБАВИТЬ СЕРВЕР</h4>
-            <input type="text" id="new-name" placeholder="Название (USA)">
-            <input type="text" id="new-photo" placeholder="Ссылка на фото (URL)">
-            <button class="btn" style="background: #222; border: 1px solid var(--red);" onclick="addServer()">СОХРАНИТЬ</button>
+            <input type="text" id="new-name" placeholder="Название сервера">
+            <input type="text" id="new-photo" placeholder="URL фото флага">
+            <button class="btn" style="height: 45px; font-size: 12px; background: #222; border: 1px solid var(--red);" onclick="addServer()">ДОБАВИТЬ СЕРВЕР</button>
         </div>
-        <button class="btn" style="background:none; margin-top:15px" onclick="backToServers()">ВЕРНУТЬСЯ К VPN</button>
+        <div id="admin-list" class="server-list" style="max-height: 140px; border: 1px solid #222; border-radius: 10px; padding: 10px; background: #000;"></div>
+        <button class="btn" style="background:none; margin-top:15px; color: #666;" onclick="backToServers()">НАЗАД</button>
     </div>
 </div>
+
 <script>
-    const STORAGE_KEY = 'virtux_servers';
-    window.onload = function() {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        saved.forEach(s => renderServer(s.name, s.photo));
-        setInterval(updatePings, 2000);
-    };
+    const STORAGE_KEY = 'virtux_v3_data';
+    let servers = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
+        {name: 'GERMANY, FRANKFURT', photo: 'https://flagcdn.com', id: 1},
+        {name: 'RUSSIA, MOSCOW', photo: 'https://flagcdn.com', id: 2},
+        {name: 'USA, NEW YORK', photo: 'https://flagcdn.com', id: 3}
+    ];
+
+    window.onload = () => { renderAll(); setInterval(updatePings, 2000); };
+
     function login() {
-        const u = document.getElementById('user').value.trim();
-        const p = document.getElementById('pass').value.trim();
-        if(u === 'loqin' && p === 'house2233') {
+        if(document.getElementById('user').value.trim() === 'loqin' && document.getElementById('pass').value.trim() === 'house2233') {
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('server-panel').style.display = 'block';
             document.getElementById('m-btn').style.display = 'block';
         } else { alert('ACCESS DENIED'); }
     }
-    function toggleMenu() {
-        const ov = document.getElementById('m-overlay');
-        ov.style.display = (ov.style.display === 'flex') ? 'none' : 'flex';
+
+    function renderAll() {
+        const mainList = document.getElementById('main-server-list');
+        const adminList = document.getElementById('admin-list');
+        mainList.innerHTML = ''; adminList.innerHTML = '';
+        servers.forEach(s => {
+            const item = document.createElement('div');
+            item.className = 'server-item';
+            item.onclick = function() { select(this); };
+            item.innerHTML = `<img src="${s.photo}" class="flag-img"> <span>${s.name}</span> <span class="ping"><span class="p-val">${Math.floor(Math.random()*40+5)}</span>ms</span>`;
+            mainList.appendChild(item);
+
+            const admItem = document.createElement('div');
+            admItem.style = "display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #111; font-size:11px;";
+            admItem.innerHTML = `<span style="color:#888">${s.name}</span> <button class="del-btn" onclick="deleteServer(${s.id})">DEL</button>`;
+            adminList.appendChild(admItem);
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(servers));
     }
+
+    function addServer() {
+        const n = document.getElementById('new-name').value.toUpperCase();
+        const p = document.getElementById('new-photo').value;
+        if(!n || !p) return alert('Fill fields!');
+        servers.push({name: n, photo: p, id: Date.now()});
+        renderAll();
+        document.getElementById('new-name').value = ''; document.getElementById('new-photo').value = '';
+    }
+
+    function deleteServer(id) {
+        servers = servers.filter(s => s.id !== id);
+        renderAll();
+    }
+
     function select(el) {
         document.querySelectorAll('.server-item').forEach(s => s.classList.remove('active'));
         el.classList.add('active');
     }
+
     function updatePings() {
         document.querySelectorAll('.p-val').forEach(pv => {
-            let n = parseInt(pv.innerText);
-            pv.innerText = Math.max(2, n + (Math.floor(Math.random() * 3) - 1));
+            pv.innerText = Math.max(2, parseInt(pv.innerText) + (Math.floor(Math.random() * 3) - 1));
         });
     }
+
     function startConnect() {
-        if(!document.querySelector('.active')) return alert('Select server!');
+        if(!document.querySelector('.active')) return alert('SELECT SERVER');
         document.getElementById('conn-btn').style.display = 'none';
-        document.getElementById('main-server-list').style.opacity = '0.2';
+        document.getElementById('main-server-list').style.opacity = '0.1';
         document.getElementById('loader').style.display = 'block';
         let w = 0;
         let int = setInterval(() => {
             w++;
             document.getElementById('p-bar').style.width = w + '%';
             if(w >= 100) { clearInterval(int); document.getElementById('loader').style.display = 'none'; document.getElementById('success-mark').style.display = 'block'; }
-        }, 70); 
+        }, 60); 
     }
-    function addServer() {
-        const name = document.getElementById('new-name').value;
-        const photo = document.getElementById('new-photo').value;
-        if(!name || !photo) return alert('Fill fields!');
-        renderServer(name, photo);
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        saved.push({name, photo});
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
-        backToServers();
-    }
-    function renderServer(name, photo) {
-        const list = document.getElementById('main-server-list');
-        const newItem = document.createElement('div');
-        newItem.className = 'server-item';
-        newItem.onclick = function() { select(this); };
-        newItem.innerHTML = `<img src="${photo}" class="flag-img"> ${name.toUpperCase()} <span class="ping"><span class="p-val">${Math.floor(Math.random()*100)}</span>ms</span>`;
-        list.appendChild(newItem);
-    }
+
+    function toggleMenu() { const o = document.getElementById('m-overlay'); o.style.display = (o.style.display === 'flex') ? 'none' : 'flex'; }
     function showAdmin() { toggleMenu(); hideAll(); document.getElementById('admin-panel').style.display = 'block'; }
     function showPayment() { toggleMenu(); hideAll(); document.getElementById('payment-panel').style.display = 'block'; }
     function backToServers() { hideAll(); document.getElementById('server-panel').style.display = 'block'; }
@@ -140,6 +183,9 @@
         document.getElementById('server-panel').style.display = 'none';
         document.getElementById('payment-panel').style.display = 'none';
         document.getElementById('admin-panel').style.display = 'none';
+        document.getElementById('success-mark').style.display = 'none';
+        document.getElementById('conn-btn').style.display = 'block';
+        document.getElementById('main-server-list').style.opacity = '1';
     }
 </script>
 </body>
