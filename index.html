@@ -2,186 +2,200 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Premium Command Interface</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VirtuX VPN</title>
     <style>
-        :root {
-            --bg: #050505;
-            --red: #ff003c;
-            --red-glow: rgba(255, 0, 60, 0.5);
-            --green: #00f2ff; /* Бирюзово-голубой для контраста или чистый зеленый #00ff88 */
-            --glass: rgba(255, 255, 255, 0.03);
-        }
+        :root { --main: #ff0000; --bg: #080808; --card: #121212; --text: #ffffff; --shadow: rgba(255, 0, 0, 0.4); }
+        .blue-theme { --main: #00d9ff; --bg: #000a12; --card: #011627; --shadow: rgba(0, 217, 255, 0.4); }
+        .toxic-theme { --main: #39ff14; --bg: #050a05; --card: #0d1a0d; --shadow: rgba(57, 255, 20, 0.4); }
+        .purple-theme { --main: #bc13fe; --bg: #0a0112; --card: #1a012e; --shadow: rgba(188, 19, 254, 0.4); }
 
-        body, html {
-            margin: 0;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: var(--bg);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow: hidden;
-        }
-
-        /* Живой анимированный фон */
-        .bg-animate {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 50% 50%, #1a0000 0%, #050505 100%);
-            z-index: -1;
-        }
-
-        .bg-blob {
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: var(--red-glow);
-            filter: blur(150px);
-            border-radius: 50%;
-            z-index: -1;
-            animation: move 15s infinite alternate;
-        }
-
-        @keyframes move {
-            from { transform: translate(-30%, -30%); }
-            to { transform: translate(30%, 30%); }
-        }
-
-        /* Стеклянная панель интерфейса */
-        .glass-panel {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 60px 100px;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            text-align: center;
-            position: relative;
-        }
-
-        h1 {
-            color: white;
-            font-weight: 200;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-            margin-bottom: 40px;
-            font-size: 14px;
-            opacity: 0.7;
-        }
-
-        /* Мощная кнопка */
-        .btn-wrapper {
-            position: relative;
-            display: inline-block;
-            padding: 3px;
-            border-radius: 12px;
-            background: linear-gradient(45deg, var(--red), transparent, var(--red));
-            background-size: 200% 200%;
-            animation: borderRotate 4s linear infinite;
-        }
-
-        @keyframes borderRotate {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
-        }
-
-        .main-btn {
-            background: #000;
-            color: white;
-            border: none;
-            padding: 20px 45px;
-            font-size: 18px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-            display: block;
-        }
-
-        .main-btn:hover {
-            background: var(--red);
-            box-shadow: 0 0 30px var(--red);
-            transform: translateY(-2px);
-        }
-
-        /* Оверлей результата */
-        #result-screen {
-            position: fixed;
-            inset: 0;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0,0,0,0.9);
-            z-index: 100;
-            backdrop-filter: blur(10px);
-        }
-
-        .icon-draw {
-            width: 150px;
-            height: 150px;
-        }
-
-        /* Анимация галочки и креста через SVG */
-        .checkmark__circle { stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 2; stroke-miterlimit: 10; stroke: #00ff88; fill: none; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
-        .checkmark__check { transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48; stroke: #00ff88; fill: none; animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards; }
+        * { box-sizing: border-box; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        .container { background-color: var(--card); padding: 40px; border-radius: 24px; box-shadow: 0 0 50px rgba(0,0,0,0.8), 0 0 20px var(--shadow); width: 440px; text-align: center; border: 2px solid var(--main); position: relative; height: 750px; z-index: 10; }
         
-        .cross__path { stroke-dasharray: 48; stroke-dashoffset: 48; stroke: var(--red); stroke-width: 4; fill: none; animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.5s forwards; }
+        #floating-chat { position: fixed; top: 20px; left: 20px; width: 220px; z-index: 100; display: none; }
+        .chat-toggle { background: var(--card); border: 1px solid var(--main); padding: 10px; border-radius: 12px; cursor: pointer; font-weight: 900; font-size: 11px; display: flex; align-items: center; gap: 8px; box-shadow: 0 0 10px var(--shadow); color: var(--main); text-transform: uppercase; }
+        .chat-window { background: rgba(0,0,0,0.95); border: 1px solid var(--main); border-radius: 12px; margin-top: 10px; height: 280px; display: none; flex-direction: column; overflow: hidden; backdrop-filter: blur(10px); }
+        .chat-msgs { flex-grow: 1; overflow-y: auto; padding: 10px; font-size: 11px; color: #ccc; }
+        .chat-input { background: #000; border: none; border-top: 1px solid #222; color: white; padding: 12px; outline: none; width: 100%; font-size: 11px; }
 
-        @keyframes stroke { 100% { stroke-dashoffset: 0; } }
+        .screen { display: none; height: 100%; flex-direction: column; animation: slideUp 0.4s ease-out; }
+        .active-screen { display: flex; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+        h1 { font-size: 34px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin: 15px 0; }
+        .accent { color: var(--main); text-shadow: 0 0 10px var(--shadow); }
+        input, select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #222; background: #0a0a0a; color: white; margin-bottom: 10px; outline: none; font-size: 14px; }
+        input:focus, select:focus { border-color: var(--main); box-shadow: 0 0 10px var(--shadow); }
+        .btn { width: 100%; padding: 18px; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; background: var(--main); color: white; text-transform: uppercase; }
+        .btn:hover { filter: brightness(1.2); transform: translateY(-2px); box-shadow: 0 5px 15px var(--shadow); }
+
+        .nav-btn { position: absolute; top: 25px; right: 25px; cursor: pointer; font-size: 28px; display: none; }
+        .menu-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 900; display: none; flex-direction: column; justify-content: center; align-items: center; }
+        .menu-link { color: white; text-decoration: none; font-size: 18px; margin: 12px; font-weight: bold; cursor: pointer; }
+        .menu-link:hover { color: var(--main); }
+
+        .item-list { flex-grow: 1; overflow-y: auto; margin-bottom: 15px; padding: 5px; }
+        .item { background: #161616; padding: 14px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; border: 1px solid #222; position: relative; }
+        .active-item { border-color: var(--main); background: rgba(255,0,0,0.05); }
+        .flag { width: 35px; height: 22px; border-radius: 4px; object-fit: cover; margin-right: 15px; background: #333; }
+        
+        #toast { position: fixed; top: 20px; right: 20px; background: var(--main); color: white; padding: 15px 30px; border-radius: 10px; font-weight: bold; display: none; z-index: 2000; }
+        .p-bar-wrap { width: 100%; height: 6px; background: #222; border-radius: 10px; overflow: hidden; margin: 15px 0; display: none; }
+        .p-bar { width: 0%; height: 100%; background: var(--main); box-shadow: 0 0 10px var(--main); }
+        .admin-edit-list { background: #000; border-radius: 10px; padding: 10px; max-height: 120px; overflow-y: auto; font-size: 11px; text-align: left; border: 1px solid #222; }
     </style>
 </head>
 <body>
 
-    <div class="bg-animate"></div>
-    <div class="bg-blob"></div>
+<div id="toast"></div>
 
-    <div class="glass-panel">
-        <h1>Satellite Connection</h1>
-        <div class="btn-wrapper">
-            <button class="main-btn" onclick="connect()">Подключиться</button>
-        </div>
+<div id="floating-chat">
+    <div class="chat-toggle" onclick="toggleChat()">💬 ЧАТ ПОЛЬЗОВАТЕЛЕЙ</div>
+    <div class="chat-window" id="chat-win">
+        <div class="chat-msgs" id="chat-list"></div>
+        <input type="text" class="chat-input" id="chat-in" placeholder="Введите сообщение..." onkeypress="if(event.key==='Enter') sendChat()">
+    </div>
+</div>
+
+<div class="container">
+    <div class="nav-btn" id="burger" onclick="toggleMenu()">☰</div>
+
+    <div id="menu" class="menu-overlay">
+        <div class="menu-link" onclick="nextTheme()">🌓 СМЕНИТЬ ТЕМУ</div>
+        <div class="menu-link" onclick="nav('scr-pay'); toggleMenu()">💳 ПЛАН ОБНОВЛЕНИЯ</div>
+        <div class="menu-link" onclick="nav('scr-adm-auth'); toggleMenu()">⚙ ПАНЕЛЬ АДМИНИСТРАТОРА</div>
+        <div class="menu-link" onclick="location.reload()" style="color:#444">ВЫХОД</div>
+        <div class="menu-link" onclick="toggleMenu()" style="margin-top:20px; font-size:14px; opacity:0.5;">ЗАКРЫТЬ</div>
     </div>
 
-    <div id="result-screen" onclick="hide()">
-        <div id="icon-container"></div>
+    <div id="scr-reg" class="screen active-screen">
+        <h1><span class="accent">virtux</span> vpn</h1>
+        <input type="text" id="reg-user" placeholder="Логин (от 3 до 35)">
+        <input type="password" id="reg-pass" placeholder="Пароль (от 3 до 35)">
+        <button class="btn" onclick="register()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+        <p style="margin-top:20px; font-size:13px; cursor:pointer;" onclick="nav('scr-login')">Уже есть аккаунт? <span class="accent">Войти</span></p>
     </div>
 
-    <script>
-        function connect() {
-            const screen = document.getElementById('result-screen');
-            const container = document.getElementById('icon-container');
-            const isSuccess = Math.random() > 0.5;
+    <div id="scr-login" class="screen">
+        <h1><span class="accent">virtux</span> login</h1>
+        <input type="text" id="login-user" placeholder="Логин">
+        <input type="password" id="login-pass" placeholder="Пароль">
+        <button class="btn" onclick="login()">ВОЙТИ</button>
+    </div>
 
-            screen.style.display = 'flex';
+    <div id="scr-adm-auth" class="screen">
+        <h1>ADMIN <span class="accent">AUTH</span></h1>
+        <input type="text" id="adm-user" placeholder="Ник">
+        <input type="password" id="adm-pass" placeholder="Пароль">
+        <button class="btn" onclick="authAdmin()">ПОДТВЕРДИТЬ</button>
+        <button class="btn" style="background:none; margin-top:10px;" onclick="nav('scr-vpn')">ОТМЕНА</button>
+    </div>
 
-            if (isSuccess) {
-                container.innerHTML = `
-                    <svg class="icon-draw" viewBox="0 0 52 52">
-                        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
-                        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-                    </svg>
-                `;
-            } else {
-                container.innerHTML = `
-                    <svg class="icon-draw" viewBox="0 0 52 52">
-                        <circle class="checkmark__circle" style="stroke: #ff003c" cx="26" cy="26" r="25" fill="none"/>
-                        <path class="cross__path" d="M16 16L36 36" />
-                        <path class="cross__path" d="M36 16L16 36" />
-                    </svg>
-                `;
-            }
+    <div id="scr-dev" class="screen">
+        <h1>DEVI<span class="accent">CE</span></h1>
+        <div class="item-list" id="dev-list"></div>
+        <button class="btn" onclick="nav('scr-vpn')">ДАЛЕЕ</button>
+    </div>
 
-            setTimeout(hide, 2500);
-        }
+    <div id="scr-vpn" class="screen">
+        <h1>VIRTUX <span class="accent">VPN</span></h1>
+        <div class="item-list" id="srv-list"></div>
+        <div class="p-bar-wrap" id="ldr"><div class="p-bar" id="p-bar"></div></div>
+        <div id="ok" style="display:none; font-size:50px; color:#00ff00; margin:10px;">✔</div>
+        <button class="btn" id="c-btn" onclick="connect()">ПОДКЛЮЧИТЬСЯ</button>
+    </div>
 
-        function hide() {
-            document.getElementById('result-screen').style.display = 'none';
-        }
-    </script>
+    <div id="scr-adm" class="screen">
+        <h1 style="font-size:24px;">ADMIN <span class="accent">CONTROL</span></h1>
+        <select id="adm-type">
+            <option value="srv">СЕРВЕР (SERVER)</option>
+            <option value="dev">УСТРОЙСТВО (DEVICE)</option>
+        </select>
+        <input type="text" id="adm-n" placeholder="Название (Name)">
+        <input type="text" id="adm-p" placeholder="Ссылка на фото (URL)">
+        <button class="btn" style="height:45px; font-size:12px;" onclick="addItem()">ДОБАВИТЬ ЭЛЕМЕНТ</button>
+        <div class="admin-edit-list" id="adm-items"></div>
+        <button class="btn" style="background:none; margin-top:10px;" onclick="nav('scr-vpn')">НАЗАД</button>
+    </div>
+
+    <div id="scr-pay" class="screen">
+        <h1>PAY<span class="accent">MENT</span></h1>
+        <div class="item" onclick="toast('Генерация СБП...')">💳 СБП / КАРТЫ</div>
+        <div class="item" onclick="toast('Кошелек скопирован!')">₿ CRYPTO</div>
+        <button class="btn" style="background:none; border:1px solid #333; margin-top:20px;" onclick="nav('scr-vpn')">НАЗАД</button>
+    </div>
+</div>
+
+<script>
+    let user = null; let lastMsg = 0; let currentTheme = 0;
+    const themes = ['', 'blue-theme', 'toxic-theme', 'purple-theme'];
+    let servers = JSON.parse(localStorage.getItem('vx_srv_v5')) || [{name:'GERMANY', photo:'https://flagcdn.com', id:1}];
+    let devices = JSON.parse(localStorage.getItem('vx_dev_v5')) || [{name:'WINDOWS', photo:'https://cdn-icons-png.flaticon.com', id:10}];
+
+    window.onload = () => { renderAll(); setInterval(updatePings, 2000); };
+
+    function nav(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen')); document.getElementById(id).classList.add('active-screen'); }
+    function toast(txt) { const t = document.getElementById('toast'); t.innerText = txt; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3000); }
+    
+    function register() {
+        const u = document.getElementById('reg-user').value.trim(); const p = document.getElementById('reg-pass').value.trim();
+        if(u.length < 3 || u.length > 35) return toast("3-35 символов!");
+        localStorage.setItem('vx_user_' + u, p); toast("Готово!"); nav('scr-login');
+    }
+
+    function login() {
+        const u = document.getElementById('login-user').value.trim(); const p = document.getElementById('login-pass').value.trim();
+        if(localStorage.getItem('vx_user_' + u) === p || (u === 'loqin' && p === 'house2233')) {
+            user = u; document.getElementById('burger').style.display = 'block'; document.getElementById('floating-chat').style.display = 'block'; nav('scr-dev');
+        } else toast("Ошибка входа!");
+    }
+
+    function authAdmin() { if(document.getElementById('adm-user').value === 'admin' && document.getElementById('adm-pass').value === 'house2233') nav('scr-adm'); else toast("Отказ!"); }
+
+    function renderAll() {
+        const sList = document.getElementById('srv-list'); const dList = document.getElementById('dev-list'); const aList = document.getElementById('adm-items');
+        sList.innerHTML = ''; dList.innerHTML = ''; aList.innerHTML = '';
+        servers.forEach(s => {
+            sList.innerHTML += `<div class="item" onclick="sel(this)"><img src="${s.photo}" class="flag"> ${s.name} <span class="ping"><span class="p-val">${Math.floor(Math.random()*30+5)}</span>ms</span></div>`;
+            aList.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px;">[SRV] ${s.name} <span onclick="delItem(${s.id}, 'srv')" style="color:red; cursor:pointer;">УДАЛИТЬ</span></div>`;
+        });
+        devices.forEach(d => {
+            dList.innerHTML += `<div class="item" onclick="sel(this)"><img src="${d.photo}" class="flag"> ${d.name}</div>`;
+            aList.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px;">[DEV] ${d.name} <span onclick="delItem(${d.id}, 'dev')" style="color:red; cursor:pointer;">УДАЛИТЬ</span></div>`;
+        });
+        localStorage.setItem('vx_srv_v5', JSON.stringify(servers)); localStorage.setItem('vx_dev_v5', JSON.stringify(devices));
+    }
+
+    function addItem() {
+        const t = document.getElementById('adm-type').value; const n = document.getElementById('adm-n').value.toUpperCase(); const p = document.getElementById('adm-p').value;
+        if(!n || !p) return toast("Заполни поля!");
+        if(t === 'srv') servers.push({name:n, photo:p, id:Date.now()}); else devices.push({name:n, photo:p, id:Date.now()});
+        renderAll(); toast("Добавлено!");
+    }
+
+    function delItem(id, type) { if(type === 'srv') servers = servers.filter(x => x.id !== id); else devices = devices.filter(x => x.id !== id); renderAll(); }
+    function sel(el) { el.parentElement.querySelectorAll('.item').forEach(i => i.classList.remove('active-item')); el.classList.add('active-item'); }
+    function toggleMenu() { const m = document.getElementById('menu'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; }
+    function nextTheme() { currentTheme = (currentTheme + 1) % themes.length; document.body.className = themes[currentTheme]; toast("Тема: OK"); }
+    function toggleChat() { const w = document.getElementById('chat-win'); w.style.display = (w.style.display === 'flex') ? 'none' : 'flex'; }
+
+    function sendChat() {
+        if(Date.now() - lastMsg < 2000) return toast("Не спамь!");
+        const i = document.getElementById('chat-in'); if(!i.value) return;
+        document.getElementById('chat-list').innerHTML += `<div><b style="color:var(--main)">${user}:</b> ${i.value}</div>`;
+        i.value = ''; lastMsg = Date.now();
+    }
+
+    function connect() {
+        if(!document.querySelector('#srv-list .active-item')) return toast("Выбери сервер!");
+        document.getElementById('c-btn').style.display = 'none'; document.getElementById('ldr').style.display = 'block';
+        let w = 0; let int = setInterval(() => { w += 2; document.getElementById('p-bar').style.width = w + '%'; if(w>=100){ clearInterval(int); document.getElementById('ldr').style.display='none'; document.getElementById('ok').style.display='block'; toast("CONNECTED"); } }, 80);
+    }
+
+    function updatePings() { document.querySelectorAll('.p-val').forEach(p => p.innerText = Math.max(2, parseInt(p.innerText) + (Math.floor(Math.random()*3)-1))); }
+    setInterval(() => { document.getElementById('chat-list').innerHTML = '<div style="opacity:0.3">Чат очищен...</div>'; }, 30000);
+</script>
 </body>
 </html>
