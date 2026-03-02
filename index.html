@@ -2,125 +2,185 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futuristic Interface</title>
+    <title>Premium Command Interface</title>
     <style>
         :root {
-            --bg-color: #0a0a0a;
-            --accent-red: #ff003c;
-            --accent-green: #00ff88;
-            --text-white: #ffffff;
+            --bg: #050505;
+            --red: #ff003c;
+            --red-glow: rgba(255, 0, 60, 0.5);
+            --green: #00f2ff; /* Бирюзово-голубой для контраста или чистый зеленый #00ff88 */
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
-        body {
+        body, html {
             margin: 0;
-            height: 100vh;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: var(--bg-color);
-            background-image: radial-gradient(circle, #1a1a1a 1px, transparent 1px);
-            background-size: 30px 30px;
-            font-family: 'Orbitron', sans-serif;
+            background-color: var(--bg);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             overflow: hidden;
         }
 
-        .container {
+        /* Живой анимированный фон */
+        .bg-animate {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1a0000 0%, #050505 100%);
+            z-index: -1;
+        }
+
+        .bg-blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: var(--red-glow);
+            filter: blur(150px);
+            border-radius: 50%;
+            z-index: -1;
+            animation: move 15s infinite alternate;
+        }
+
+        @keyframes move {
+            from { transform: translate(-30%, -30%); }
+            to { transform: translate(30%, 30%); }
+        }
+
+        /* Стеклянная панель интерфейса */
+        .glass-panel {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 60px 100px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
             text-align: center;
             position: relative;
         }
 
-        /* Стильная кнопка с анимацией */
-        .connect-btn {
-            position: relative;
-            padding: 20px 50px;
-            font-size: 1.5rem;
-            color: var(--text-white);
-            background: transparent;
-            border: 2px solid var(--accent-red);
+        h1 {
+            color: white;
+            font-weight: 200;
+            letter-spacing: 8px;
             text-transform: uppercase;
-            letter-spacing: 4px;
+            margin-bottom: 40px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        /* Мощная кнопка */
+        .btn-wrapper {
+            position: relative;
+            display: inline-block;
+            padding: 3px;
+            border-radius: 12px;
+            background: linear-gradient(45deg, var(--red), transparent, var(--red));
+            background-size: 200% 200%;
+            animation: borderRotate 4s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .main-btn {
+            background: #000;
+            color: white;
+            border: none;
+            padding: 20px 45px;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: 0.5s;
-            overflow: hidden;
-            box-shadow: 0 0 15px rgba(255, 0, 60, 0.2);
+            transition: 0.3s;
+            display: block;
         }
 
-        .connect-btn:hover {
-            background: var(--accent-red);
-            color: #000;
-            box-shadow: 0 0 50px var(--accent-red);
+        .main-btn:hover {
+            background: var(--red);
+            box-shadow: 0 0 30px var(--red);
+            transform: translateY(-2px);
         }
 
-        /* Контейнер для результата (галочка/крест) */
-        #status-overlay {
+        /* Оверлей результата */
+        #result-screen {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            inset: 0;
             display: none;
             justify-content: center;
             align-items: center;
-            background: rgba(0,0,0,0.85);
-            z-index: 10;
+            background: rgba(0,0,0,0.9);
+            z-index: 100;
+            backdrop-filter: blur(10px);
         }
 
-        .icon-box {
-            font-size: 10rem;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .icon-draw {
+            width: 150px;
+            height: 150px;
         }
 
-        @keyframes popIn {
-            0% { transform: scale(0); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+        /* Анимация галочки и креста через SVG */
+        .checkmark__circle { stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 2; stroke-miterlimit: 10; stroke: #00ff88; fill: none; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
+        .checkmark__check { transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48; stroke: #00ff88; fill: none; animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards; }
+        
+        .cross__path { stroke-dasharray: 48; stroke-dashoffset: 48; stroke: var(--red); stroke-width: 4; fill: none; animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.5s forwards; }
 
-        .success { color: var(--accent-green); text-shadow: 0 0 30px var(--accent-green); }
-        .error { color: var(--accent-red); text-shadow: 0 0 30px var(--accent-red); }
+        @keyframes stroke { 100% { stroke-dashoffset: 0; } }
 
-        /* Декоративные элементы по углам */
-        .corner {
-            position: absolute;
-            width: 20px; height: 20px;
-            border: 2px solid var(--accent-red);
-        }
-        .top-left { top: -10px; left: -10px; border-right: none; border-bottom: none; }
-        .bottom-right { bottom: -10px; right: -10px; border-left: none; border-top: none; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="corner top-left"></div>
-        <button class="connect-btn" onclick="handleConnect()">Подключиться</button>
-        <div class="corner bottom-right"></div>
+    <div class="bg-animate"></div>
+    <div class="bg-blob"></div>
+
+    <div class="glass-panel">
+        <h1>Satellite Connection</h1>
+        <div class="btn-wrapper">
+            <button class="main-btn" onclick="connect()">Подключиться</button>
+        </div>
     </div>
 
-    <div id="status-overlay" onclick="this.style.display='none'">
-        <div id="status-icon" class="icon-box"></div>
+    <div id="result-screen" onclick="hide()">
+        <div id="icon-container"></div>
     </div>
 
     <script>
-        function handleConnect() {
-            const overlay = document.getElementById('status-overlay');
-            const icon = document.getElementById('status-icon');
-            
-            // Рандомный выбор: успех (true) или ошибка (false)
+        function connect() {
+            const screen = document.getElementById('result-screen');
+            const container = document.getElementById('icon-container');
             const isSuccess = Math.random() > 0.5;
 
-            overlay.style.display = 'flex';
-            
+            screen.style.display = 'flex';
+
             if (isSuccess) {
-                icon.innerHTML = '✓';
-                icon.className = 'icon-box success';
+                container.innerHTML = `
+                    <svg class="icon-draw" viewBox="0 0 52 52">
+                        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                `;
             } else {
-                icon.innerHTML = '✕';
-                icon.className = 'icon-box error';
+                container.innerHTML = `
+                    <svg class="icon-draw" viewBox="0 0 52 52">
+                        <circle class="checkmark__circle" style="stroke: #ff003c" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="cross__path" d="M16 16L36 36" />
+                        <path class="cross__path" d="M36 16L16 36" />
+                    </svg>
+                `;
             }
 
-            // Автоматически скрываем через 2 секунды
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 2000);
+            setTimeout(hide, 2500);
+        }
+
+        function hide() {
+            document.getElementById('result-screen').style.display = 'none';
         }
     </script>
 </body>
