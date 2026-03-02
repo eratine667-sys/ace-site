@@ -3,67 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dark Interface</title>
+    <title>Futuristic Interface</title>
     <style>
-        /* Базовые стили для фона */
+        :root {
+            --bg-color: #0a0a0a;
+            --accent-red: #ff003c;
+            --accent-green: #00ff88;
+            --text-white: #ffffff;
+        }
+
         body {
             margin: 0;
-            padding: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #000000; /* Черный фон */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #ffffff; /* Белый текст */
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle, #1a1a1a 1px, transparent 1px);
+            background-size: 30px 30px;
+            font-family: 'Orbitron', sans-serif;
+            overflow: hidden;
         }
 
-        /* Контейнер */
         .container {
             text-align: center;
+            position: relative;
         }
 
-        /* Заголовок (опционально) */
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 30px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        /* Стильная кнопка */
+        /* Стильная кнопка с анимацией */
         .connect-btn {
-            background-color: transparent;
-            color: #ff0000; /* Красный текст */
-            border: 2px solid #ff0000; /* Красная рамка */
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            font-weight: bold;
+            position: relative;
+            padding: 20px 50px;
+            font-size: 1.5rem;
+            color: var(--text-white);
+            background: transparent;
+            border: 2px solid var(--accent-red);
             text-transform: uppercase;
+            letter-spacing: 4px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            outline: none;
+            transition: 0.5s;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(255, 0, 60, 0.2);
         }
 
-        /* Эффект при наведении */
         .connect-btn:hover {
-            background-color: #ff0000; /* Красный фон */
-            color: #ffffff; /* Белый текст */
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); /* Красное свечение */
+            background: var(--accent-red);
+            color: #000;
+            box-shadow: 0 0 50px var(--accent-red);
         }
 
-        /* Эффект при нажатии */
-        .connect-btn:active {
-            transform: scale(0.95);
+        /* Контейнер для результата (галочка/крест) */
+        #status-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.85);
+            z-index: 10;
         }
+
+        .icon-box {
+            font-size: 10rem;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .success { color: var(--accent-green); text-shadow: 0 0 30px var(--accent-green); }
+        .error { color: var(--accent-red); text-shadow: 0 0 30px var(--accent-red); }
+
+        /* Декоративные элементы по углам */
+        .corner {
+            position: absolute;
+            width: 20px; height: 20px;
+            border: 2px solid var(--accent-red);
+        }
+        .top-left { top: -10px; left: -10px; border-right: none; border-bottom: none; }
+        .bottom-right { bottom: -10px; right: -10px; border-left: none; border-top: none; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Система готова</h1>
-        <button class="connect-btn">Подключиться</button>
+        <div class="corner top-left"></div>
+        <button class="connect-btn" onclick="handleConnect()">Подключиться</button>
+        <div class="corner bottom-right"></div>
     </div>
 
+    <div id="status-overlay" onclick="this.style.display='none'">
+        <div id="status-icon" class="icon-box"></div>
+    </div>
+
+    <script>
+        function handleConnect() {
+            const overlay = document.getElementById('status-overlay');
+            const icon = document.getElementById('status-icon');
+            
+            // Рандомный выбор: успех (true) или ошибка (false)
+            const isSuccess = Math.random() > 0.5;
+
+            overlay.style.display = 'flex';
+            
+            if (isSuccess) {
+                icon.innerHTML = '✓';
+                icon.className = 'icon-box success';
+            } else {
+                icon.innerHTML = '✕';
+                icon.className = 'icon-box error';
+            }
+
+            // Автоматически скрываем через 2 секунды
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
